@@ -1,0 +1,1708 @@
+<!-- ============================================================
+     ΤΡΙΩΡΟ ΔΙΑΓΩΝΙΣΜΑ ΣΤΑ ΚΥΜΑΤΑ – Διαδραστική έκδοση v4
+     Λειτουργίες: Εξέταση / Μελέτη · Προσομοιώσεις · Βήμα-βήμα
+     Επιμέλεια: Τάσος Τζανόπουλος
+     Βελτιώσεις v4: συνεχίστε, PDF, νέο Δ5, SEO-safe reveal
+     ============================================================ -->
+
+<!-- MathJax -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+  startup: { pageReady: function(){ return MathJax.startup.defaultPageReady().then(function(){ var a=document.getElementById('kx-app'); if(a) a.classList.remove('kx-pending'); }); } }
+};
+setTimeout(function(){ var a=document.getElementById('kx-app'); if(a) a.classList.remove('kx-pending'); }, 6000);
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=GFS+Didot&display=swap" rel="stylesheet">
+
+
+<style>
+/* ---------- Βάση ---------- */
+#kx-app{--bg:#f8fafc;--card:#ffffff;--txt:#0f172a;--mut:#475569;--line:#e2e8f0;--soft:#f1f5f9;
+  --A:#0891b2;--B:#2563eb;--G:#4f46e5;--D:#059669;--ok:#059669;--bad:#e11d48;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--txt);background:var(--bg);
+  max-width:980px;margin:0 auto;padding:12px;line-height:1.7;font-size:15.5px;box-sizing:border-box}
+#kx-app.dark{--bg:#020617;--card:#0f172a;--txt:#f1f5f9;--mut:#94a3b8;--line:#1e293b;--soft:#1e293b}
+#kx-app *{box-sizing:border-box}
+#kx-app p,#kx-app li,#kx-app td,#kx-app th,#kx-app label,#kx-app summary{color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important}
+#kx-app .mut{color:var(--mut)!important;-webkit-text-fill-color:var(--mut)!important}
+#kx-app h1,#kx-app h2,#kx-app h3{color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important;margin:0}
+#kx-app img,#kx-app svg,#kx-app canvas{max-width:100%;height:auto;display:block}
+#kx-app.kx-pending .mathbox,#kx-app.kx-pending .res{visibility:hidden;min-height:2.5rem}
+#kx-app mjx-container{color:inherit!important}
+#kx-app mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+
+/* ---------- Hero ---------- */
+.kx-hero{background:linear-gradient(135deg,#ecfeff,#eef2ff);border:1px solid var(--line);border-radius:22px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden}
+#kx-app.dark .kx-hero{background:linear-gradient(135deg,#082f49,#1e1b4b)}
+.kx-hero h1{
+  font-family:'GFS Didot','Palatino Linotype','Book Antiqua',Georgia,serif;
+  font-size:1.9rem;
+  font-weight:700;
+  letter-spacing:.03em;
+  color:#8b5a2b!important;
+  -webkit-text-fill-color:#8b5a2b!important;
+  text-shadow:1px 1px 0 rgba(212,165,116,.4),2px 2px 4px rgba(0,0,0,.15);
+  border-bottom:2px solid #8b5a2b;
+  padding-bottom:8px;
+  margin:4px 0 2px;
+}
+  #kx-app.dark .kx-hero h1{
+  color:#d4a574!important;
+  -webkit-text-fill-color:#d4a574!important;
+  border-bottom-color:#d4a574;
+}
+.kx-hero .kx-sub{
+  font-family:'GFS Didot',Georgia,serif;
+  font-size:1rem;
+  font-style:italic;
+  color:var(--mut)!important;
+  -webkit-text-fill-color:var(--mut)!important;
+  margin-top:6px;
+  letter-spacing:.03em;
+}
+.kx-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.kx-badge{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:999px;background:#fff;border:1px solid var(--line)}
+#kx-app.dark .kx-badge{background:#0f172a}
+
+/* ---------- Toolbar (sticky) ---------- */
+.kx-bar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#kx-app.dark .kx-bar{background:rgba(15,23,42,.92)}
+.kx-mode{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kx-mode button{padding:6px 12px;border:0;background:transparent;font-weight:700;cursor:pointer;color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important;font-size:.82rem}
+.kx-mode button.on{background:var(--A);color:#fff!important;-webkit-text-fill-color:#fff!important}
+.kx-score{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.kx-total{font-size:1.25rem;font-weight:900}
+.kx-bars{display:grid;grid-template-columns:repeat(4,minmax(70px,1fr));gap:6px;min-width:280px}
+.kx-bars div{font-size:.62rem;font-weight:800}
+.kx-bars i{display:block;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.kx-bars b{display:block;height:100%;width:0;transition:width .5s}
+.kx-timer{font-family:"Fira Code",ui-monospace,monospace;font-weight:700;font-size:.9rem;padding:4px 10px;border-radius:8px;background:var(--soft)}
+.kx-timer.warn{background:#fef3c7;color:#92400e!important}
+.kx-timer.danger{background:#fee2e2;color:#991b1b!important;animation:kx-pulse 1s infinite}
+@keyframes kx-pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.kx-btn{padding:7px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer;font-size:.82rem;color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important}
+.kx-btn.pri{background:var(--A);border-color:var(--A);color:#fff!important;-webkit-text-fill-color:#fff!important}
+.kx-btn:disabled{opacity:.5;cursor:not-allowed}
+#kx-app button:focus-visible,#kx-app select:focus-visible,#kx-app input:focus-visible{outline:3px solid var(--A);outline-offset:2px}
+
+/* ---------- Θέματα / κάρτες ---------- */
+.kx-tema{margin:28px 0 12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--line);padding-bottom:8px}
+.kx-tema .let{width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:1.1rem;flex-shrink:0}
+.kx-tema h2{font-size:1.25rem;font-weight:800}
+.kx-tema .pts{margin-left:auto;font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:8px;background:var(--soft)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:14px;overflow:hidden;position:relative}
+.q::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--th)}
+.q[data-theme="A"]{--th:var(--A)} .q[data-theme="B"]{--th:var(--B)} .q[data-theme="G"]{--th:var(--G)} .q[data-theme="D"]{--th:var(--D)}
+.q .head{display:flex;justify-content:space-between;padding:10px 18px;background:var(--soft);border-bottom:1px solid var(--line);font-size:.8rem;font-weight:800}
+.q .head span:first-child{color:var(--th)!important;-webkit-text-fill-color:var(--th)!important}
+.q .body{padding:16px 18px}
+.lbl{display:inline-block;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:6px;background:var(--th);color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:8px}
+.fig{margin:12px auto;padding:8px;border:1px solid var(--line);border-radius:12px;background:#fff;max-width:560px}
+#kx-app.dark .fig{background:#0b1220}
+.fig svg text{fill:#0f172a;font-family:inherit;font-size:12px}
+#kx-app.dark .fig svg text{fill:#e2e8f0}
+
+/* επιλογές */
+.opts{display:grid;gap:8px;margin:10px 0}
+.opt{text-align:left;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:.93rem;color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important;transition:.15s}
+.opt:hover{border-color:var(--th)}
+.opt.ok{border-color:var(--ok);background:rgba(5,150,105,.10)}
+.opt.bad{border-color:var(--bad);background:rgba(225,29,72,.10)}
+.opt:disabled{cursor:default}
+.tfrow{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.tfrow .tfb{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.tf{padding:5px 14px;border-radius:8px;border:2px solid #64748b;background:#fff;font-weight:800;font-size:.8rem;cursor:pointer;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important}
+#kx-app.dark .tf{background:#334155;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#94a3b8}
+.tf.ok{background:rgba(5,150,105,.2)!important;border-color:var(--ok)!important}
+.tf.bad{background:rgba(225,29,72,.2)!important;border-color:var(--bad)!important}
+.why{margin-top:8px;font-size:.88rem}
+.why summary{cursor:pointer;font-weight:700;color:var(--th)!important;-webkit-text-fill-color:var(--th)!important}
+.why>div{padding:8px 0 2px}
+.match{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;margin:10px 0}
+.match select{padding:6px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--txt);font-weight:700}
+.match select.ok{border-color:var(--ok)} .match select.bad{border-color:var(--bad)}
+.numq{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:10px;border:1px dashed var(--line);border-radius:12px}
+.numq input{width:140px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--txt);font-family:ui-monospace,monospace;font-weight:700}
+.numq .fb{font-size:.85rem;font-weight:700}
+.numq.ok{border-color:var(--ok)} .numq.bad{border-color:var(--bad)}
+
+/* λύσεις */
+.sol{border:1px solid var(--line);border-radius:12px;margin-top:12px;overflow:hidden}
+.sol summary{padding:9px 14px;background:var(--soft);font-size:.8rem;font-weight:800;cursor:pointer;list-style:none}
+.sol summary::-webkit-details-marker{display:none}
+.sol summary::before{content:"🔑 ";}
+.sol>div{padding:12px 16px;font-size:.93rem}
+/* ΔΙΟΡΘΩΣΗ: τα details να μην ανοίγουν μόνα τους */
+details:not([open]) > *:not(summary){display:none}
+details > summary{list-style:none;cursor:pointer}
+details > summary::-webkit-details-marker{display:none}
+.mathbox{margin:10px 0;padding:10px 14px;background:var(--soft);border-left:3px solid var(--th);border-radius:8px;text-align:center;overflow-x:auto}
+.res{margin:10px 0;padding:9px 14px;border-radius:8px;text-align:center;font-weight:800;background:rgba(8,145,178,.12);border:1px solid var(--th)}
+.res,.res *{color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important}
+#kx-app[data-mode="exam"] .sol,#kx-app[data-mode="exam"] .why,#kx-app[data-mode="exam"] .steps .step-body,#kx-app[data-mode="exam"] .revealall{display:none!important}
+#kx-app[data-mode="exam"] .study-only{display:none!important}
+#kx-app[data-mode="study"] .exam-only{display:none!important}
+
+/* βήματα */
+.steps{margin:12px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.step{border-top:1px solid var(--line);padding:12px 14px;display:none}
+.step.show{display:block}
+.step:first-child{border-top:0;display:block}
+.steps{counter-reset:st}
+.step{counter-increment:st}
+.step .gate{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.step .gate::before{content:"Βήμα " counter(st)" \00B7 ";color:var(--th)}
+.step .mini{display:flex;gap:6px;flex-wrap:wrap}
+.step .mini button{padding:5px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:.85rem;color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important}
+.step .mini button.ok{border-color:var(--ok);background:rgba(5,150,105,.12)} .step .mini button.bad{border-color:var(--bad)}
+.step-body{display:none;margin-top:8px;font-size:.92rem}
+.step-body.show{display:block}
+.revealall{font-size:.78rem;padding:8px 14px;background:var(--soft);text-align:right}
+.revealall button{background:none;border:0;cursor:pointer;font-weight:800;color:var(--th)!important;-webkit-text-fill-color:var(--th)!important}
+
+/* προσομοιώσεις */
+.sim{border:1px solid var(--line);border-radius:16px;padding:12px;margin:12px 0;background:var(--card)}
+.sim h3{font-size:.9rem;font-weight:800;margin-bottom:6px}
+.sim canvas{display:block;width:100% !important;height:auto !important;max-width:100%;border-radius:10px;background:#fff}
+#kx-app.dark .sim canvas{background:#0b1220}
+.simctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:.82rem;font-weight:700}
+.simctl input[type=range]{flex:1;min-width:150px}
+.simctl .chip{padding:3px 9px;border-radius:8px;border:1px solid var(--line);cursor:pointer;background:var(--card);font-size:.75rem;font-weight:800;color:var(--txt)!important;-webkit-text-fill-color:var(--txt)!important}
+.simmsg{font-size:.85rem;margin-top:6px;min-height:1.4em}
+
+/* πίνακας / τέλος */
+.kx-final{margin:24px 0;padding:22px;border-radius:18px;text-align:center;background:linear-gradient(135deg,var(--soft),var(--card));border:1px solid var(--line)}
+.kx-final .big{font-size:2.6rem;font-weight:900}
+table.kx-tab{width:100%;border-collapse:collapse;font-size:.85rem}
+table.kx-tab th,table.kx-tab td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.kx-tab th{background:var(--soft)}
+
+/* ---------- Κουμπί «Συνεχίστε» ---------- */
+#kx-continue-gate{text-align:center;margin:32px 0;padding:24px;border-radius:18px;background:linear-gradient(135deg,rgba(8,145,178,.08),rgba(37,99,235,.08));border:1px dashed var(--A)}
+#kx-continue-gate .kx-continue-btn{font-size:1.05rem;padding:14px 36px;font-weight:800;letter-spacing:.02em;box-shadow:0 4px 14px rgba(8,145,178,.3);transition:transform .15s,box-shadow .15s}
+#kx-continue-gate .kx-continue-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(8,145,178,.4)}
+#kx-continue-gate p{margin-top:10px;font-size:.85rem}
+
+/* ---------- Κουμπιά λήψης PDF ---------- */
+.kx-downloads{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:32px 0 24px}
+.kx-download-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 26px;border-radius:14px;
+  background:linear-gradient(135deg,#0891b2,#2563eb);
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-weight:800;font-size:.95rem;
+  text-decoration:none!important;      /* ← ΝΕΟ */
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(8,145,178,.3);
+  transition:transform .15s,box-shadow .15s;
+  font-family:inherit;
+  border:0;
+}
+.kx-download-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(8,145,178,.4);
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+.kx-download-btn.alt{background:linear-gradient(135deg,#7c3aed,#4f46e5)}
+.kx-download-btn.alt:hover{box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.kx-dl-icon{font-size:1.2em;line-height:1}
+
+/* ---------- Print ---------- */
+@media print{
+  .kx-bar,.sim,.kx-btn,.kx-badge,.kx-mode,.kx-timer,#kx-continue-gate,.kx-downloads{display:none!important}
+  #kx-rest{display:block!important}
+  .sol,.step,.step-body,.why{display:block!important}
+  .sol{page-break-inside:avoid}
+  .sol summary{background:none;border-bottom:1px solid #ccc}
+  .sol summary::before{content:"Λύση: "}
+  #kx-app{max-width:100%;padding:0;font-size:11pt}
+  .q{page-break-inside:avoid;border:1px solid #999}
+  .q::before{display:none}
+  .opts button{border:1px solid #999}
+  .opt.ok::after{content:" ✓";font-weight:900}
+  .opt.bad::after{content:" ✗"}
+  .tf.ok::after{content:" ✓"}
+  .tf.bad::after{content:" ✗"}
+  .kx-final{page-break-before:always}
+  /* Εκφώνηση: κρύψε λύσεις */
+  #kx-app[data-print="exam"] .sol,
+  #kx-app[data-print="exam"] .why,
+  #kx-app[data-print="exam"] .steps,
+  #kx-app[data-print="exam"] .numq,
+  #kx-app[data-print="exam"] .kx-final,
+  #kx-app[data-print="exam"] .tfrow .tfb,
+  #kx-app[data-print="exam"] .opts button{cursor:default}
+  /* Λύσεις: όλα ορατά */
+  #kx-app[data-print="solution"] details{display:block!important}
+  #kx-app[data-print="solution"] details > *{display:block!important}
+}
+/* Το link καθαρής προβολής εμφανίζεται μόνο σε υπολογιστές */
+.kx-desktop-only{ display:block; }
+@media (max-width: 900px){
+  .kx-desktop-only{ display:none; }
+}
+.kx-clean-link{
+  color:var(--A)!important;
+  -webkit-text-fill-color:var(--A)!important;
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px dashed var(--A);
+}
+.kx-clean-link:hover{
+  border-bottom-style:solid;
+}
+/* Επιλογή σε exam mode: ουδέτερη, χωρίς αποκάλυψη */
+#kx-app[data-mode="exam"] .opt.selected{
+  border-color:var(--A);
+  background:rgba(8,145,178,.08);
+}
+#kx-app[data-mode="exam"] .tf.selected{
+  background:rgba(8,145,178,.12)!important;
+  border-color:var(--A)!important;
+}
+/* Σε exam mode: απόκρυψη ok/bad χρωμάτων */
+#kx-app[data-mode="exam"] .opt.ok,
+#kx-app[data-mode="exam"] .opt.bad{
+  /* Δεν πρέπει να φαίνονται */
+  border-color:var(--A)!important;
+  background:rgba(8,145,178,.08)!important;
+}
+#kx-app[data-mode="exam"] .tf.ok,
+#kx-app[data-mode="exam"] .tf.bad{
+  background:rgba(8,145,178,.12)!important;
+  border-color:var(--A)!important;
+}
+</style>
+
+<div id="kx-app" class="kx-pending" data-mode="study" role="main">
+
+<!-- ================= HERO ================= -->
+<section class="kx-hero">
+  <div class="kx-badges">
+    <span class="kx-badge">Γ΄ Λυκείου · Προσανατολισμού</span>
+    <span class="kx-badge">Κύματα · Στάσιμα · Συμβολή · Ταλαντώσεις</span>
+    <span class="kx-badge">Διαδραστική έκδοση v4</span>
+  </div>
+  <h1>Τρίωρο Διαγώνισμα στα Κύματα</h1>
+  <p class="kx-sub">Για καλά διαβασμένους</p>
+  <p class="mut" style="margin-top:8px">
+    Επίλεξε <b>📖 Μελέτη</b> για βήμα-βήμα λύσεις, προσομοιώσεις και άμεση ανάδραση, ή <b>⏱ Εξέταση</b> για να το γράψεις με χρονόμετρο και με κρυφές τις λύσεις. © Τάσος Τζανόπουλος.
+  </p>
+  <ul class="kx-hints">
+  <li>
+    💾 Η πρόοδός σου <b>αποθηκεύεται αυτόματα</b>. 
+    <b>Μπορείς να σταματήσεις όποτε θέλεις και να συνεχίσεις από εκεί που σταμάτησες.</b>
+    Για να ξεκινήσεις από την αρχή πάτησε 
+    <button type="button" class="kx-inline-btn kx-inline-reset" onclick="resetAll()">↺ Μηδενισμός</button>
+  </li>
+  <li>
+    🌙 Πάτησε 
+    <button type="button" class="kx-inline-btn kx-inline-dark" onclick="toggleDark()">🌙/☀️</button>
+    για <b>σκοτεινή λειτουργία</b> — ιδανικό για βραδινό διάβασμα
+  </li>
+  <li>
+    ⌨️ <b>Πολλαπλής επιλογής</b>: πλήκτρα <b>α</b>, <b>β</b>, <b>γ</b>, <b>δ</b> για την 1η, 2η, 3η, 4η επιλογή
+  </li>
+  <li>
+    ⌨️ <b>Σωστό/Λάθος</b>: σε κάθε πρόταση πιέστε το αντίστοιχο πλήκτρο <b>Σ</b> ή <b>Λ</b>
+  </li>
+  <li>
+    ⌨️ <b>Αν επιλέξεις Εξέταση, τότε:</b>: <b>Enter ή υποβολή</b> για καταχώρηση και βαθμολόγηση της συνολικής απάντησης σου
+  </li>
+  <li>
+    📄 <b>Εκφώνηση</b> και <b>Λύσεις</b> διαθέσιμες από τα κουμπιά στο τέλος
+  </li>
+</ul>
+</section>
+
+<!-- ================= TOOLBAR ================= -->
+<div class="kx-bar" role="toolbar">
+  <div class="kx-mode" role="tablist">
+    <button id="mStudy" class="on" onclick="setMode('study')" aria-label="Λειτουργία μελέτης" role="tab" aria-selected="true">📖 Μελέτη</button>
+    <button id="mExam" onclick="setMode('exam')" aria-label="Λειτουργία εξέτασης με χρονόμετρο" role="tab" aria-selected="false">⏱ Εξέταση</button>
+  </div>
+  <span id="timer" class="kx-timer exam-only" aria-live="polite">03:00:00</span>
+  <button class="kx-btn pri exam-only" onclick="submitExam()" aria-label="Υποβολή εξέτασης">Υποβολή</button>
+  <button class="kx-btn" onclick="toggleDark()" aria-label="Εναλλαγή σκούρου/φωτεινού θέματος">🌙/☀️</button>
+  <button class="kx-btn" onclick="resetAll()" aria-label="Μηδενισμός όλων">↺ Μηδενισμός</button>
+  <div class="kx-score">
+    <div class="kx-bars">
+      <div>Α <i><b id="bA" style="background:var(--A)"></b></i><span id="sA">0</span>/25</div>
+      <div>Β <i><b id="bB" style="background:var(--B)"></b></i><span id="sB">0</span>/25</div>
+      <div>Γ <i><b id="bG" style="background:var(--G)"></b></i><span id="sG">0</span>/25</div>
+      <div>Δ <i><b id="bD" style="background:var(--D)"></b></i><span id="sD">0</span>/25</div>
+    </div>
+    <span class="kx-total"><span id="sTot">0</span><small>/100</small></span>
+  </div>
+</div>
+
+<!-- ================================================================
+     ΘΕΜΑ Α — Α1 πάντα ορατό, τα υπόλοιπα στο #kx-rest
+     ================================================================ -->
+<div class="kx-tema"><span class="let" style="background:var(--A)">Α</span><h2>ΘΕΜΑ Α — Ερωτήσεις θεωρίας</h2><span class="pts">25 μονάδες</span></div>
+<p class="mut" style="font-size:.9rem">Στα Α1–Α4 μία πρόταση είναι σωστή. Επίλεξέ την.</p>
+
+<article class="q" data-theme="A" data-q="A1" data-pts="5" data-correct="3">
+  <div class="head"><span>Α1</span><span>5 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Σε ένα γραμμικό εγκάρσιο αρμονικό κύμα σταθερού πλάτους:</p>
+    <div class="opts" role="group" aria-label="Επιλογές Α1">
+      <button class="opt" onclick="mc(this)">α. Όλα τα σημεία έχουν διεύθυνση ταλάντωσης παράλληλη στη διεύθυνση διάδοσης.</button>
+      <button class="opt" onclick="mc(this)">β. Κάθε στιγμή όλα τα σημεία έχουν ίδια ταχύτητα ταλάντωσης ίση με την ταχύτητα του κύματος.</button>
+      <button class="opt" onclick="mc(this)">γ. Η ταχύτητα του κύματος είναι ανάλογη του μήκους κύματος.</button>
+      <button class="opt" onclick="mc(this)">δ. Το μήκος κύματος είναι αντιστρόφως ανάλογο της συχνότητας.</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p><b>Ανάλυση κάθε επιλογής:</b></p>
+      <ul>
+        <li><b>α. Λάθος.</b> Στο <em>εγκάρσιο</em> κύμα η ταλάντωση είναι <em>κάθετη</em> στη διεύθυνση διάδοσης. Παράλληλη είναι μόνο στο διαμήκη κύμα.</li>
+        <li><b>β. Λάθος.</b> Κάθε σημείο έχει τη <em>δική του</em> ταχύτητα ταλάντωσης $υ_{ταλ}=ωAσυν(ωt-2πx/λ)$, που μεταβάλλεται αρμονικά. Η ταχύτητα <em>διάδοσης</em> $υ=λf$ είναι σταθερή για δεδομένο μέσο και <em>δεν ταυτίζεται</em> με την ταχύτητα ταλάντωσης.</li>
+        <li><b>γ. Λάθος.</b> Από $υ=λf$, για σταθερό $f$ το $λ$ είναι ανάλογο του $υ$ — όχι το αντίστροφο. Για δεδομένο μέσο το $υ$ είναι σταθερό, οπότε το $λ$ μεταβάλλεται μόνο αν αλλάξει το $f$.</li>
+        <li><b>δ. Σωστό.</b> Από $υ=λf$ με σταθερό $υ$: $λ=υ/f$ → <em>αντιστρόφως ανάλογο</em> της συχνότητας.</li>
+      </ul>
+      <div class="res">Σωστή: δ</div></div></details>
+  </div>
+</article>
+
+<!-- ============ ΚΟΥΜΠΙ ΣΥΝΕΧΙΣΤΕ ============ -->
+<div id="kx-continue-gate">
+  <button class="kx-btn pri kx-continue-btn" 
+          onclick="revealRest()"
+          aria-label="Εμφάνιση υπολοίπων θεμάτων">
+    Συνεχίστε →
+  </button>
+
+  
+
+</div>
+<!-- ============ ΤΑ ΥΠΟΛΟΙΠΑ (ΑΡΧΙΚΑ ΚΡΥΜΜΕΝΑ) ============ -->
+<div id="kx-rest" style="display:none">
+
+<!-- Α2 -->
+<article class="q" data-theme="A" data-q="A2" data-pts="5" data-correct="0">
+  <div class="head"><span>Α2</span><span>5 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Στο εγκάρσιο κύμα του σχήματος το σημείο Α έχει μικρότερη φάση από το σημείο Β. Άρα οι ταχύτητες ταλάντωσης των δύο σημείων έχουν φορά:</p>
+    <div class="fig">
+      <svg viewBox="0 0 420 160" width="100%" role="img" aria-label="Στιγμιότυπο εγκάρσιου κύματος">
+        <line x1="10" y1="80" x2="410" y2="80" stroke="#94a3b8" stroke-width="1"/>
+        <path id="a2w" d="" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+        <g id="a2pts"></g>
+        <text x="380" y="74" font-size="11">x</text>
+        <text x="140" y="20" fill="#059669" font-size="11">διάδοση ←</text>
+      </svg>
+      <div class="simctl study-only"><span>Κίνηση:</span><input type="range" id="a2t" min="0" max="1" step="0.01" value="0" oninput="drawA2(+this.value)" aria-label="Χρόνος"><button class="chip" onclick="animA2()" aria-label="Play">▶ Play</button></div>
+    </div>
+    <div class="opts" role="group" aria-label="Επιλογές Α2">
+      <button class="opt" onclick="mc(this)">α. Του Α προς τα πάνω και του Β προς τα κάτω.</button>
+      <button class="opt" onclick="mc(this)">β. Του Α προς τα πάνω και του Β προς τα πάνω.</button>
+      <button class="opt" onclick="mc(this)">γ. Του Α προς τα κάτω και του Β προς τα κάτω.</button>
+      <button class="opt" onclick="mc(this)">δ. Του Α προς τα κάτω και του Β προς τα πάνω.</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p><b>Βήμα 1 – Κατεύθυνση διάδοσης.</b> Δίνεται $Φ_Α \lt Φ_Β$. Το κύμα διαδίδεται προς τα σημεία <em>μικρότερης</em> φάσης — άρα από το Β (μεγαλύτερη φάση) προς το Α (μικρότερη φάση), δηλαδή <b>προς τα αριστερά</b>.</p>
+      <p><b>Βήμα 2 – Κίνηση Α.</b> Το Α βρίσκεται στο δεξί τμήμα μιας κοιλάδας, στο ανερχόμενο τμήμα. Επειδή το κύμα έρχεται από τα δεξιά, το Α «αντιγράφει» την κίνηση των δεξιότερων σημείων, που είναι ψηλότερα → το Α <b>ανεβαίνει</b> ↑.</p>
+      <p><b>Βήμα 3 – Κίνηση Β.</b> Το Β βρίσκεται στο δεξί τμήμα μιας κορυφής, στο κατερχόμενο τμήμα. Τα δεξιότερα σημεία είναι χαμηλότερα → το Β <b>κατεβαίνει</b> ↓.</p>
+      <p>Δοκίμασε το Play για οπτική επιβεβαίωση.</p>
+      <div class="res">Σωστή: α</div></div></details>
+  </div>
+</article>
+
+<!-- Α3 -->
+<article class="q" data-theme="A" data-q="A3" data-pts="5" data-correct="2">
+  <div class="head"><span>Α3</span><span>5 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Η ταχύτητα του ήχου στον ακίνητο αέρα, όπως την εκτιμά ένας ακίνητος ως προς το έδαφος παρατηρητής, εξαρτάται:</p>
+    <div class="opts" role="group" aria-label="Επιλογές Α3">
+      <button class="opt" onclick="mc(this)">α. Από την ταχύτητα με την οποία κινείται η πηγή που τον παράγει.</button>
+      <button class="opt" onclick="mc(this)">β. Από την ένταση του ήχου.</button>
+      <button class="opt" onclick="mc(this)">γ. Από τη θερμοκρασία του αέρα.</button>
+      <button class="opt" onclick="mc(this)">δ. Από το μήκος κύματος του ήχου.</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p>Η ταχύτητα διάδοσης ενός κύματος καθορίζεται <em>αποκλειστικά</em> από τις ιδιότητες του μέσου διάδοσης. Για τον αέρα, προσεγγιστικά: $υ \approx 331 + 0{,}6\,θ$ (m/s), όπου $θ$ η θερμοκρασία σε °C.</p>
+      <ul>
+        <li><b>α. Λάθος.</b> Η κίνηση της πηγής αλλάζει τη <em>συχνότητα</em> που αντιλαμβάνεται ο παρατηρητής (Doppler), όχι την ταχύτητα διάδοσης.</li>
+        <li><b>β. Λάθος.</b> Η ένταση σχετίζεται με το πλάτος/ενέργεια, όχι με την ταχύτητα.</li>
+        <li><b>γ. Σωστό.</b> Η θερμοκρασία επηρεάζει την ταχύτητα του ήχου στον αέρα.</li>
+        <li><b>δ. Λάθος.</b> Το $λ$ είναι συνέπεια: $λ=υ/f$.</li>
+      </ul>
+      <div class="res">Σωστή: γ</div></div></details>
+  </div>
+</article>
+
+<!-- Α4 -->
+<article class="q" data-theme="A" data-q="A4" data-pts="5" data-correct="0">
+  <div class="head"><span>Α4</span><span>5 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Σε ένα στάσιμο κύμα, τα σημεία που βρίσκονται μεταξύ δύο διαδοχικών δεσμών:</p>
+    <div class="opts" role="group" aria-label="Επιλογές Α4">
+      <button class="opt" onclick="mc(this)">α. Δέχονται δυνάμεις επαναφοράς που είναι διαρκώς ομόρροπες μεταξύ τους.</button>
+      <button class="opt" onclick="mc(this)">β. Έχουν ίδιο πλάτος ταλάντωσης.</button>
+      <button class="opt" onclick="mc(this)">γ. Έχουν ίδια μέγιστη ταχύτητα.</button>
+      <button class="opt" onclick="mc(this)">δ. Εκτελούν α.α.τ. με ίδια φάση αλλά διαφορετική συχνότητα.</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p>Στάσιμο κύμα: $y=2Aσυν(2πx/λ)\,ημωt$. Σε μια άτρακτο (μεταξύ διαδοχικών δεσμών) το $συν(2πx/λ)$ έχει <em>σταθερό πρόσημο</em>.</p>
+      <ul>
+        <li><b>α. Σωστό.</b> Όλα τα σημεία της ίδιας ατράκτου έχουν την ίδια φάση $ημωt$, άρα την ίδια στιγμή βρίσκονται στην ίδια πλευρά της Θ.Ι. και δέχονται δυνάμεις επαναφοράς $F=-Dy$ που είναι διαρκώς <em>ομόρροπες</em>.</li>
+        <li><b>β. Λάθος.</b> Το πλάτος $2A|συν(2πx/λ)|$ ποικίλλει: μέγιστο στις κοιλίες, μηδέν στους δεσμούς.</li>
+        <li><b>γ. Λάθος.</b> $υ_{max}=ω\cdot(πλάτος)$, διαφορετικό για κάθε σημείο.</li>
+        <li><b>δ. Λάθος.</b> Όλα τα σημεία έχουν <em>την ίδια</em> συχνότητα (αυτή των τρεχόντων κυμάτων) — η φάση είναι ίδια εντός ατράκτου, αλλά η συχνότητα δεν αλλάζει.</li>
+      </ul>
+      <div class="res">Σωστή: α</div></div></details>
+  </div>
+</article>
+
+<!-- Α5 -->
+<article class="q" data-theme="A" data-q="A5" data-pts="5">
+  <div class="head"><span>Α5</span><span>5 μονάδες (1 έκαστη)</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Σημείωσε Σωστό (Σ) ή Λάθος (Λ):</p>
+    <div class="tfrow" data-sub="α" data-ans="Σ" data-pts="1"><p>α. Σε επιφανειακή συμβολή, στα σημεία των υπερβολών απόσβεσης τα δύο κύματα έχουν διαφορά φάσης περιττό πολλαπλάσιο του π.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')" aria-label="Σωστό">Σωστό</button><button class="tf" onclick="tf(this,'Λ')" aria-label="Λάθος">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>Υπερβολές απόσβεσης: $r_1-r_2=(2N+1)λ/2$. Άρα $Δφ = 2π(r_1-r_2)/λ = (2N+1)π$ — περιττό πολλαπλάσιο του π. <b>Σωστό.</b></div></details></div>
+    <div class="tfrow" data-sub="β" data-ans="Λ" data-pts="1"><p>β. Όσο μεγαλύτερη η συχνότητα, τόσο μεγαλύτερη η απόσταση δύο σημείων με δεδομένη διαφορά φάσης.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')" aria-label="Σωστό">Σωστό</button><button class="tf" onclick="tf(this,'Λ')" aria-label="Λάθος">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>$Δx = Δφ\,λ/2π = Δφ\,υ/(2πf)$. Για δεδομένο $Δφ$ και σταθερό $υ$, το $Δx$ είναι <b>αντιστρόφως ανάλογο</b> της $f$. Άρα η πρόταση είναι <b>λάθος</b>.</div></details></div>
+    <div class="tfrow" data-sub="γ" data-ans="Σ" data-pts="1"><p>γ. Σε στάσιμο κύμα όλα τα κινούμενα μόρια διέρχονται ταυτόχρονα από τη θέση ισορροπίας.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')" aria-label="Σωστό">Σωστό</button><button class="tf" onclick="tf(this,'Λ')" aria-label="Λάθος">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>$y=2Aσυν(2πx/λ)ημωt$. Το $ημωt$ μηδενίζεται για όλα τα $x$ τις ίδιες στιγμές ($t=nT/2$). <b>Σωστό.</b></div></details></div>
+    <div class="tfrow" data-sub="δ" data-ans="Λ" data-pts="1"><p>δ. Η μέγιστη ταχύτητα ταλάντωσης των σημείων του μέσου είναι ανάλογη του μήκους κύματος.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')" aria-label="Σωστό">Σωστό</button><button class="tf" onclick="tf(this,'Λ')" aria-label="Λάθος">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>$υ_{max}=ωA=(2πυ/λ)A$. Για σταθερά $υ, A$, το $υ_{max}$ είναι <b>αντιστρόφως ανάλογο</b> του $λ$. <b>Λάθος.</b></div></details></div>
+    <div class="tfrow" data-sub="ε" data-ans="Λ" data-pts="1"><p>ε. Στο κενό τα εγκάρσια μηχανικά κύματα έχουν τη μεγαλύτερη ταχύτητα διάδοσης.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')" aria-label="Σωστό">Σωστό</button><button class="tf" onclick="tf(this,'Λ')" aria-label="Λάθος">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>Τα μηχανικά κύματα <b>δεν διαδίδονται καθόλου</b> στο κενό — χρειάζονται υλικό μέσο. <b>Λάθος.</b></div></details></div>
+  </div>
+</article>
+
+<!-- ================================================================
+     ΘΕΜΑ Β
+     ================================================================ -->
+<div class="kx-tema"><span class="let" style="background:var(--B)">Β</span><h2>ΘΕΜΑ Β — Σωστό/Λάθος με αιτιολόγηση</h2><span class="pts">25 μονάδες</span></div>
+
+<!-- Β1 -->
+<article class="q" data-theme="B" data-q="B1" data-pts="6">
+  <div class="head"><span>Β1</span><span>6 μονάδες (1,5 έκαστη)</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Κατά μήκος μιας τεντωμένης χορδής πολύ μεγάλου μήκους διαδίδεται, χωρίς απώλεια ενέργειας, εγκάρσιο αρμονικό κύμα. Η απομάκρυνση ενός σημείου Ο της χορδής, που το θεωρούμε αρχή των συντεταγμένων ($x=0$), περιγράφεται από την εξίσωση $ψ=0{,}4\,ημωt$. Στο σχήμα δίνεται η γραφική παράσταση της διαφοράς φάσης $Φ_Μ-Φ_Ν$ δύο σημείων Μ και Ν της χορδής με συντεταγμένες $x_Μ=4$ m και $x_Ν$, συναρτήσει του χρόνου.</p>
+    <div class="fig"><svg viewBox="0 0 440 220" width="100%" role="img" aria-label="Γράφημα διαφοράς φάσης">
+      <line x1="50" y1="180" x2="420" y2="180" stroke="#0f172a" stroke-width="1.5"/><polygon points="420,180 412,176 412,184" fill="#0f172a"/>
+      <line x1="50" y1="180" x2="50" y2="20" stroke="#0f172a" stroke-width="1.5"/><polygon points="50,20 46,28 54,28" fill="#0f172a"/>
+      <text x="396" y="200">t (s)</text><text x="12" y="30">Δφ (rad)</text>
+      <line x1="50" y1="60" x2="420" y2="60" stroke="#94a3b8" stroke-dasharray="4 4"/>
+      <text x="34" y="64">π</text>
+      <polyline points="50,180 190,180 260,60 420,60" fill="none" stroke="#dc2626" stroke-width="3"/>
+      <line x1="190" y1="180" x2="190" y2="186" stroke="#0f172a"/><text x="182" y="200">0,4</text>
+      <line x1="260" y1="180" x2="260" y2="186" stroke="#0f172a"/><text x="252" y="200">0,6</text>
+      <line x1="260" y1="60" x2="260" y2="180" stroke="#94a3b8" stroke-dasharray="3 3"/>
+      <text x="40" y="184">0</text>
+    </svg></div>
+    <p>Χαρακτήρισε τις προτάσεις:</p>
+    <div class="tfrow" data-sub="α" data-ans="Λ" data-pts="1.5"><p>α. Η ταχύτητα του κύματος είναι 5 m/s.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Η $Φ_Μ$ αρχίζει να αυξάνεται τη στιγμή 0,4 s: τότε το κύμα έφτασε στο Μ (x=4 m). Άρα:</p>
+      <div class="mathbox">$$υ = \frac{x_M}{t_M} = \frac{4}{0{,}4} = 10\ \text{m/s}$$</div>
+      <p>Το 5 m/s θα ήταν σωστό μόνο αν η διαδρομή ήταν 2 m. <b>Λάθος.</b></p></div></details></div>
+    <div class="tfrow" data-sub="β" data-ans="Σ" data-pts="1.5"><p>β. Η συντεταγμένη του Ν είναι $x_Ν = 6$ m.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Η διαφορά φάσης σταθεροποιείται στο π τη στιγμή 0,6 s — τότε το κύμα έφτασε και στο Ν:</p>
+      <div class="mathbox">$$x_N = υ\cdot t_N = 10\cdot0{,}6 = 6\ \text{m}$$</div>
+      <p>Το Μ έλαβε το κύμα στα 0,4 s, το Ν στα 0,6 s. <b>Σωστό.</b></p></div></details></div>
+    <div class="tfrow" data-sub="γ" data-ans="Σ" data-pts="1.5"><p>γ. Το μήκος κύματος είναι $λ = 4$ m.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Τη στιγμή 0,6 s η διαφορά φάσης σταθεροποιείται στο π. Άρα:</p>
+      <div class="mathbox">$$Φ_Μ-Φ_Ν = \frac{2π(x_N-x_M)}{λ} = π \;\Rightarrow\; λ = 2(x_N-x_M) = 2\cdot2 = 4\ \text{m}$$</div>
+      <p><b>Σωστό.</b></p></div></details></div>
+    <div class="tfrow" data-sub="δ" data-ans="Σ" data-pts="1.5"><p>δ. Η μέγιστη επιτάχυνση ταλάντωσης είναι $10π^2$ m/s².</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Από $υ=λ/T$: $T = λ/υ = 4/10 = 0{,}4$ s, άρα $ω = 2π/T = 5π$ rad/s.</p>
+      <div class="mathbox">$$a_{max} = ω^2 A = (5π)^2\cdot0{,}4 = 25π^2\cdot0{,}4 = 10π^2\ \text{m/s}^2$$</div>
+      <p><b>Σωστό.</b></p></div></details></div>
+  </div>
+</article>
+
+<!-- Β2 -->
+<article class="q" data-theme="B" data-q="B2" data-pts="6">
+  <div class="head"><span>Β2</span><span>6 μονάδες (3 + 3)</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Κατά μήκος μιας ελαστικής χορδής, που οι θέσεις ισορροπίας των μορίων της βρίσκονται πάνω στον άξονα $x'x$, έχει αποκατασταθεί ένα στάσιμο κύμα. Στο σχήμα έχουμε επιλέξει μια κοιλία ως αρχή αξόνων κι έχουμε σχεδιάσει δεξιά απ' αυτήν δύο στιγμιότυπα του στάσιμου κύματος τις χρονικές στιγμές $t_1=0$ και $t_2=T/6=1$ s. (Τη στιγμή $t_2$ η μέγιστη τιμή της απομάκρυνσης των σημείων της χορδής είναι $3\sqrt3$ cm).</p>
+    <div class="sim study-only">
+      <h3>🔬 Προσομοίωση: στάσιμο κύμα (Β2)</h3>
+      <canvas id="swB2" width="700" height="260" role="img" aria-label="Προσομοίωση στάσιμου κύματος Β2"></canvas>
+      <div class="simctl">
+        <span>t/T:</span>
+        <input type="range" id="swB2r" min="0" max="1" step="0.005" value="0" aria-label="Χρόνος σε μονάδες περιόδου">
+        <span id="swB2l">0</span>
+        <button class="chip" onclick="simSW.B2.set(0)" aria-label="t1=0">t₁=0</button>
+        <button class="chip" onclick="simSW.B2.set(1/6)" aria-label="t2=T/6">t₂=T/6</button>
+        <button class="chip" onclick="simSW.B2.set(0.25)" aria-label="t3=T/4">t₃=T/4</button>
+        <button class="chip" onclick="simSW.B2.play()" aria-label="Play">▶/❚❚</button>
+      </div>
+      <div class="simmsg mut">Οι διακεκομμένες καμπύλες είναι τα δύο στιγμιότυπα της εκφώνησης: <span style="color:#94a3b8;font-weight:800">t₁=0 (γκρι)</span> και <span style="color:#0ea5e9;font-weight:800">t₂=T/6 (κυανό)</span>. Το σημείο Α ($x=4$ m) είναι κοιλία.</div>
+    </div>
+    <p><b>i)</b> Να χαρακτηρίσετε καθεμιά από τις παρακάτω προτάσεις με Σ ή Λ (1 μονάδα η καθεμιά):</p>
+    <div class="tfrow" data-sub="α" data-ans="Λ" data-pts="1"><p>α. Το μήκος κύματος των κυμάτων που δημιουργούν το στάσιμο είναι 2 m.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Στο σχήμα φαίνονται δεσμοί στα $x=1$ m και $x=3$ m (σημεία μηδενισμού). Η απόσταση διαδοχικών δεσμών είναι $λ/2$:</p>
+      <div class="mathbox">$$\frac{λ}{2} = 3-1 = 2\ \text{m} \;\Rightarrow\; λ = 4\ \text{m}$$</div>
+      <p>Όχι 2 m. <b>Λάθος.</b></p></div></details></div>
+    <div class="tfrow" data-sub="β" data-ans="Σ" data-pts="1"><p>β. Τη στιγμή $t_3=1{,}5$ s το σημείο Α ($x=4$ m) βρίσκεται σε απομάκρυνση 6 cm.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p><b>Βήμα 1:</b> $T/6 = 1$ s → $T = 6$ s. Άρα $t_3 = 1{,}5$ s = $T/4$.</p>
+      <p><b>Βήμα 2:</b> Το στιγμιότυπο $t_2 = T/6$ έχει μέγιστη τιμή $3\sqrt3$ cm. Αυτή εμφανίζεται σε κοιλία, όπου $|συν(2πx/λ)|=1$:</p>
+      <div class="mathbox">$$y_{max} = 2A\,|συν(2πx/λ)|\,|ημ(ωt_2)| = 2A\cdot1\cdot ημ(π/3) = 2A\cdot\frac{\sqrt3}{2} = A\sqrt3$$</div>
+      <p>Άρα $A\sqrt3 = 3\sqrt3 \Rightarrow 2A = 6$ cm (πλάτος κοιλίας).</p>
+      <p><b>Βήμα 3:</b> Στο $t_3 = T/4$: $ημ(2π\cdot1/4) = 1$ → το Α βρίσκεται στην ακραία θέση $+2A = +6$ cm. <b>Σωστό.</b></p></div></details></div>
+    <div class="tfrow" data-sub="γ" data-ans="Σ" data-pts="1"><p>γ. Η μέγιστη ταχύτητα ταλάντωσης του Α είναι $2π$ cm/s.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>$ω = 2π/T = 2π/6 = π/3$ rad/s. Το Α είναι κοιλία με πλάτος $2A=6$ cm.</p>
+      <div class="mathbox">$$υ_{max} = ω\cdot2A = \frac{π}{3}\cdot6 = 2π\ \text{cm/s}$$</div>
+      <p><b>Σωστό.</b></p></div></details></div>
+    <p style="margin-top:12px"><b>ii)</b> Να δικαιολογήσετε τους χαρακτηρισμούς των προτάσεων β και γ (3 μονάδες).</p>
+    <div class="numq" data-q="B2ii" data-pts="3" data-open="1"><span class="fb">Έγραψα πλήρη αιτιολόγηση:</span><button class="kx-btn" onclick="markOpen(this)">✓ Το αιτιολόγησα σωστά (+3)</button></div>
+    <details class="sol"><summary>Υπόδειγμα αιτιολόγησης</summary><div>
+      <p><b>Για το β:</b> Από $t_2 - t_1 = T/6 = 1$ s βρίσκουμε $T=6$ s, άρα $t_3 = 1{,}5$ s $= T/4$. Στο στιγμιότυπο $t_2$ η μέγιστη απομάκρυνση (σε κοιλία) είναι $3\sqrt3$ cm, οπότε $2A\,ημ(π/3) = 3\sqrt3 \Rightarrow 2A=6$ cm. Στο $t_3=T/4$ όλες οι κοιλίες βρίσκονται στην ακραία θέση τους, άρα $y_A = +6$ cm.</p>
+      <p><b>Για το γ:</b> Η γωνιακή συχνότητα είναι $ω=2π/T=π/3$ rad/s. Για κοιλία πλάτους $2A=6$ cm, $υ_{max}=ω\cdot2A=(π/3)\cdot6=2π$ cm/s.</p>
+    </div></details>
+  </div>
+</article>
+
+<!-- Β3 -->
+<article class="q" data-theme="B" data-q="B3" data-pts="6">
+  <div class="head"><span>Β3</span><span>6 μονάδες (2 έκαστη)</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Στο σχήμα απεικονίζονται, την ίδια στιγμή $t$, τα στιγμιότυπα δύο κυμάτων με ίδια χαρακτηριστικά που διαδίδονται στο ίδιο ελαστικό μέσο με αντίθετες ταχύτητες.</p>
+    <div class="fig"><svg viewBox="0 0 460 170" width="100%" role="img" aria-label="Δύο αντίθετα κύματα">
+      <defs>
+  <!-- Κόκκινο marker -->
+  <marker id="b3-arrow-red" markerWidth="10" markerHeight="10" 
+          refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L10,5 L0,10 L3,5 Z" fill="#dc2626"/>
+  </marker>
+  
+  <!-- Μπλε marker -->
+  <marker id="b3-arrow-blue" markerWidth="10" markerHeight="10" 
+          refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L10,5 L0,10 L3,5 Z" fill="#2563eb"/>
+  </marker>
+</defs>
+      <line x1="10" y1="85" x2="450" y2="85" stroke="#94a3b8"/><text x="435" y="105">x</text>
+      <path id="b3r" fill="none" stroke="#dc2626" stroke-width="2.2"/><path id="b3b" fill="none" stroke="#2563eb" stroke-width="2.2"/><path id="b3s" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="6 4" style="display:none"/>
+      <g id="b3pts"></g>
+    <!-- Κόκκινο βέλος προς τα δεξιά (διάδοση +x) -->
+<g>
+  <line x1="40" y1="20" x2="80" y2="20" stroke="#dc2626" stroke-width="3" 
+        marker-end="url(#b3-arrow-red)"/>
+  <text x="24" y="25" fill="#dc2626" font-size="14" font-weight="bold">υ</text>
+</g>
+
+<!-- Μπλε βέλος προς τα αριστερά (διάδοση -x) -->
+<g>
+  <line x1="180" y1="20" x2="140" y2="20" stroke="#2563eb" stroke-width="3" 
+        marker-end="url(#b3-arrow-blue)"/>
+  <text x="184" y="25" fill="#2563eb" font-size="14" font-weight="bold">υ</text>
+</g>
+    </svg>
+    <div class="simctl study-only"><input type="range" id="b3t" min="0" max="1" step="0.01" value="0" oninput="drawB3(+this.value)" aria-label="Χρόνος"><button class="chip" onclick="animB3()">▶ Play</button><label class="chip"><input type="checkbox" id="b3sum" onchange="drawB3(+document.getElementById('b3t').value)"> Συνισταμένη</label></div></div>
+    <div class="tfrow" data-sub="α" data-ans="Λ" data-pts="2"><p>α. Το Κ είναι κοιλία και το Λ δεσμός του στάσιμου κύματος.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Στο σχήμα: στο Κ οι δύο καμπύλες έχουν αντίθετες απομακρύνσεις → <b>δεσμός</b>. Στο Λ οι δύο καμπύλες έχουν ίδια φορά ταχύτητας (και οι δύο προς τα πάνω) → <b>κοιλία</b>.</p>
+      <p>Ενεργοποίησε τη «Συνισταμένη» στην προσομοίωση για οπτική επιβεβαίωση.</p>
+      <p><b>Λάθος</b> (ανεστραμμένη η περιγραφή).</p></div></details></div>
+    <div class="tfrow" data-sub="β" data-ans="Λ" data-pts="2"><p>β. Τα σημεία Μ και Ν έχουν διαφορά φάσης π.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Τα Μ και Ν βρίσκονται στην <em>ίδια άτρακτο</em> (μεταξύ δύο διαδοχικών δεσμών), άρα ταλαντώνονται σε <b>φάση</b>: $Δφ=0$.</p>
+      <p><b>Λάθος.</b></p></div></details></div>
+    <div class="tfrow" data-sub="γ" data-ans="Σ" data-pts="2"><p>γ. Τη στιγμή $t$ το Λ έχει ταχύτητα προς τα κάτω.</p><div class="tfb"><button class="tf" onclick="tf(this,'Σ')">Σωστό</button><button class="tf" onclick="tf(this,'Λ')">Λάθος</button></div><details class="why"><summary>Αναλυτική αιτιολόγηση</summary><div>
+      <p>Στο Λ (κοιλία) και τα δύο κύματα δίνουν ταχύτητα $-Aω$. Η συνισταμένη ταχύτητα είναι $-2Aω$, δηλαδή <b>προς τα κάτω</b>. <b>Σωστό.</b></p></div></details></div>
+  </div>
+</article>
+
+<!-- Β4 -->
+<article class="q" data-theme="B" data-q="B4" data-pts="7">
+  <div class="head"><span>Β4</span><span>7 μονάδες (2 + 5)</span></div>
+  <div class="body">
+    <span class="lbl">Εκφώνηση</span>
+    <p>Τρεις σύγχρονες πηγές $Ο_1, Ο_2, Ο_3$ κυμάτων δημιουργούν στην επιφάνεια ενός υγρού εγκάρσια κύματα που διαδίδονται με ταχύτητα $υ=1$ m/s. Οι σημειακές πηγές βρίσκονται στις κορυφές ισοπλεύρου τριγώνου με πλευρά $α=\sqrt3$ m. Τη στιγμή $t=0$ οι πηγές αρχίζουν ταυτόχρονα να ταλαντώνονται κατακόρυφα με εξισώσεις $ψ_1=ψ_2=ψ_3=0{,}1\,ημ2πt$ (S.I.). Τη στιγμή $t_1=3$ s σταματά η $Ο_3$, τη $t_2=4$ s η $Ο_2$ και τη $t_3=5$ s η $Ο_1$.</p>
+    <div class="sim study-only">
+      <h3>🔬 Προσομοίωση: τρεις πηγές &amp; το κέντρο Κ</h3>
+      <canvas id="tri" width="700" height="300" role="img" aria-label="Προσομοίωση τριών πηγών Β4"></canvas>
+      <div class="simctl"><span>t =</span><input type="range" id="trir" min="0" max="7.5" step="0.02" value="0" aria-label="Χρόνος"><span id="tril">0,00 s</span><button class="chip" onclick="simTri.play()">▶/❚❚</button></div>
+      <div class="simmsg mut" id="trimsg"></div>
+    </div>
+    <p><b>Ι.</b> Ποια εξίσωση περιγράφει την ταλάντωση του κέντρου του τριγώνου για $1\,\text{s} \le t \le 3\,\text{s}$; (2 μονάδες)</p>
+    <div class="opts" data-sub="I" data-pts="2" data-correct="0" role="group" aria-label="Επιλογές Β4-Ι">
+      <button class="opt" onclick="mc(this)">α. $ψ_{ολ} = 0{,}3\,ημ2π(t-1)$</button>
+      <button class="opt" onclick="mc(this)">β. $ψ_{ολ} = 0{,}1\,ημ2π(t-2)$</button>
+      <button class="opt" onclick="mc(this)">γ. $ψ_{ολ} = 0{,}2\,ημ2π(2t-2)$</button>
+    </div>
+    <p><b>ΙΙ.</b> Αντιστοίχισε κάθε εξίσωση με το χρονικό διάστημα ισχύος της (1 μονάδα η καθεμιά):</p>
+    <div class="match" id="b4match">
+      <span>1. $ψ_{ολ}=0$ (πριν φτάσει το κύμα)</span><select data-correct="α" aria-label="Αντιστοίχιση 1"><option value="">—</option><option>α</option><option>β</option><option>γ</option><option>δ</option><option>ε</option></select>
+      <span>2. $ψ_{ολ}=0$ (μετά την παύση)</span><select data-correct="ε" aria-label="Αντιστοίχιση 2"><option value="">—</option><option>α</option><option>β</option><option>γ</option><option>δ</option><option>ε</option></select>
+      <span>3. $ψ_{ολ}=0{,}3\,ημ2π(t-1)$</span><select data-correct="β" aria-label="Αντιστοίχιση 3"><option value="">—</option><option>α</option><option>β</option><option>γ</option><option>δ</option><option>ε</option></select>
+      <span>4. $ψ_{ολ}=0{,}2\,ημ2π(t-1)$</span><select data-correct="γ" aria-label="Αντιστοίχιση 4"><option value="">—</option><option>α</option><option>β</option><option>γ</option><option>δ</option><option>ε</option></select>
+      <span>5. $ψ_{ολ}=0{,}1\,ημ2π(t-1)$</span><select data-correct="δ" aria-label="Αντιστοίχιση 5"><option value="">—</option><option>α</option><option>β</option><option>γ</option><option>δ</option><option>ε</option></select>
+    </div>
+    <p class="mut" style="font-size:.85rem">α. $0\le t\lt1$ s &nbsp; β. $1\le t\lt4$ s &nbsp; γ. $4\le t\lt5$ s &nbsp; δ. $5\le t\lt6$ s &nbsp; ε. $t\ge6$ s</p>
+    <button class="kx-btn pri" onclick="checkMatch('b4match','B4','II',5)">Έλεγχος αντιστοίχισης</button> <span id="b4match-fb" class="fb"></span>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p><b>Βήμα 1 – Απόσταση κέντρου–κορυφής.</b> Για ισόπλευρο τρίγωνο πλευράς $α$: η απόσταση κέντρου (βαρύκεντρο=περίκεντρο) από κάθε κορυφή ισούται με την ακτίνα του περιγεγραμμένου κύκλου:</p>
+      <div class="mathbox">$$ρ = \frac{α}{\sqrt{3}} = \frac{\sqrt3}{\sqrt3} = 1\ \text{m}$$</div>
+      <p><b>Βήμα 2 – Χρόνος άφιξης.</b> $t = ρ/υ = 1/1 = 1$ s.</p>
+      <p><b>Βήμα 3 – Πλάτος για $1\le t \lt 4$ s.</b> Και τα 3 κύματα φτάνουν ταυτόχρονα (συμμετρία) και συμβάλλουν <em>σε φάση</em>:</p>
+      <div class="mathbox">$$ψ_K = 3\cdot0{,}1\,ημ2π(t-1) = 0{,}3\,ημ2π(t-1)$$</div>
+      <p><b>Βήμα 4 – Παύσεις.</b> Κάθε παύση φτάνει στο Κ 1 s μετά τη στιγμή παύσης:</p>
+      <ul>
+        <li>$t=3$ s → παύση $Ο_3$ φτάνει στο Κ στα $t=4$ s: 2 πηγές → $0{,}2\,ημ2π(t-1)$</li>
+        <li>$t=4$ s → παύση $Ο_2$ φτάνει στο Κ στα $t=5$ s: 1 πηγή → $0{,}1\,ημ2π(t-1)$</li>
+        <li>$t=5$ s → παύση $Ο_1$ φτάνει στο Κ στα $t=6$ s: καμία πηγή → $ψ=0$</li>
+      </ul>
+      <div class="res">Ι → α · ΙΙ: 1→α, 2→ε, 3→β, 4→γ, 5→δ</div></div></details>
+  </div>
+</article>
+
+<!-- ================================================================
+     ΘΕΜΑ Γ
+     ================================================================ -->
+<div class="kx-tema"><span class="let" style="background:var(--G)">Γ</span><h2>ΘΕΜΑ Γ — Στάσιμο κύμα σε χορδή</h2><span class="pts">25 μονάδες</span></div>
+
+<article class="q" data-theme="G" data-q="G0" data-pts="0">
+  <div class="head"><span>Εκφώνηση</span><span>κοινή για Γ1–Γ4</span></div>
+  <div class="body">
+    <p>Σε μια ελαστική χορδή μεγάλου μήκους έχει διαμορφωθεί στάσιμο κύμα της μορφής $y=2A\,συν(2πx/λ)\,ημωt$ με $A=0{,}2$ m. Στο σχήμα φαίνονται τρία στιγμιότυπα α, β, γ κατά τη σειρά που εμφανίζονται στην περιοχή ΟΑ, από $x=0$ μέχρι $x_A=0{,}54$ m. Κατά την απ' ευθείας μετάβαση από το στιγμιότυπο α στο β είναι $t_β-t_α=4$ ms, ενώ στη συνέχεια, για την απ' ευθείας μετάβαση από το β στο γ, είναι $t_γ-t_β=T/3$. Το σημείο Σ αντιστοιχεί στην πρώτη κοιλία μετά από αυτήν της αρχής αξόνων Ο.</p>
+    <div class="sim">
+      <h3>🔬 Προσομοίωση: στάσιμο κύμα (Θέμα Γ)</h3>
+      <canvas id="swG" width="700" height="280" role="img" aria-label="Προσομοίωση στάσιμου κύματος Θέματος Γ"></canvas>
+      <div class="simctl">
+        <span>t/T:</span><input type="range" id="swGr" min="0" max="1" step="0.005" value="0.25" aria-label="Χρόνος σε μονάδες περιόδου"><span id="swGl">0,25</span>
+        <button class="chip" onclick="simSW.G.set(0.25)">α (T/4)</button>
+        <button class="chip" onclick="simSW.G.set(5/12)">β (5T/12)</button>
+        <button class="chip" onclick="simSW.G.set(0.75)">γ (3T/4)</button>
+        <button class="chip" onclick="simSW.G.play()">▶/❚❚</button>
+      </div>
+      <div class="simmsg mut">Το βέλος στο Σ δείχνει την ταχύτητά του. Το κόκκινο στιγμιότυπο α και το μπλε γ είναι ακραίες θέσεις.</div>
+    </div>
+  </div>
+</article>
+
+<!-- Γ1 -->
+<article class="q" data-theme="G" data-q="G1" data-pts="7">
+  <div class="head"><span>Γ1</span><span>7 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Ζητούμενο</span>
+    <p>Να υπολογίσεις την ταχύτητα διάδοσης των τρεχόντων κυμάτων από τα οποία προέκυψε το στάσιμο.</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Από το σχήμα, το $x_A = 0{,}54$ m αντιστοιχεί σε:</div><div class="mini"><button onclick="gate(this,0)">λ/2</button><button onclick="gate(this,1)">3λ/4</button><button onclick="gate(this,0)">λ</button></div>
+        <div class="step-body">
+          <p>Ξεκινάμε από κοιλία στο Ο (αφού το στιγμιότυπο α έχει μέγιστο στο $x=0$). Στο Α το στιγμιότυπο έχει επίσης κοιλία (μέγιστο). Ενδιάμεσα υπάρχει ένας δεσμός (μηδενισμός). Απόσταση Ο–Α:</p>
+          <div class="mathbox">$$x_A = \frac{3λ}{4} = 0{,}54\ \text{m} \;\Rightarrow\; λ = \frac{4\cdot0{,}54}{3} = 0{,}72\ \text{m}$$</div>
+        </div></div>
+      <div class="step"><div class="gate">Τα στιγμιότυπα α και γ είναι ακραίες θέσεις. Αν $y_O=0$ για $t=0$, τότε $t_α, t_γ$ =</div><div class="mini"><button onclick="gate(this,1)">T/4, 3T/4</button><button onclick="gate(this,0)">0, T/2</button><button onclick="gate(this,0)">T/2, T</button></div>
+        <div class="step-body">
+          <p>Στις ακραίες θέσεις τα $|ημωt|=1$, δηλαδή $ωt=(2n+1)π/2$. Δύο διαδοχικές: $t_α=T/4$ και $t_γ=3T/4$. Άρα:</p>
+          <div class="mathbox">$$t_β = t_γ - \frac{T}{3} = \frac{3T}{4} - \frac{T}{3} = \frac{9T-4T}{12} = \frac{5T}{12}$$</div>
+        </div></div>
+      <div class="step"><div class="gate">Από $t_β - t_α = 4$ ms προκύπτει:</div><div class="mini"><button onclick="gate(this,0)">T = 12 ms</button><button onclick="gate(this,1)">T = 24 ms</button><button onclick="gate(this,0)">T = 48 ms</button></div>
+        <div class="step-body">
+          <div class="mathbox">$$\frac{5T}{12} - \frac{T}{4} = \frac{5T-3T}{12} = \frac{T}{6} = 4\cdot10^{-3}\ \text{s} \;\Rightarrow\; T = 24\cdot10^{-3}\ \text{s}$$</div>
+          <div class="mathbox">$$υ = \frac{λ}{T} = \frac{0{,}72}{0{,}024} = 30\ \text{m/s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη όλων των βημάτων</button></div>
+    </div>
+    <div class="numq" data-q="G1" data-pts="7" data-ans="30" data-tol="0.6"><label>υ =</label><input placeholder="m/s" aria-label="Ταχύτητα διάδοσης"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Γ2 -->
+<article class="q" data-theme="G" data-q="G2" data-pts="6">
+  <div class="head"><span>Γ2</span><span>6 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Ζητούμενο</span><p>Να υπολογίσεις την ταχύτητα του υλικού σημείου Σ τη χρονική στιγμή $t_β$.</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Η θέση της πρώτης κοιλίας μετά την Ο (που είναι επίσης κοιλία) βρίσκεται σε απόσταση:</div><div class="mini"><button onclick="gate(this,0)">λ/4</button><button onclick="gate(this,1)">λ/2</button><button onclick="gate(this,0)">λ</button></div>
+        <div class="step-body">
+          <p>Οι κοιλίες απέχουν μεταξύ τους $λ/2$. Άρα $x_Σ = λ/2 = 0{,}36$ m.</p>
+        </div></div>
+      <div class="step"><div class="gate">Η εξίσωση κίνησης του Σ είναι:</div><div class="mini"><button onclick="gate(this,0)">$y_Σ = 2A\,ημωt$</button><button onclick="gate(this,1)">$y_Σ = -2A\,ημωt$</button></div>
+        <div class="step-body">
+          <p>Αντικαθιστώντας $x_Σ = λ/2$: $συν(2π\cdot\tfrac{λ/2}{λ}) = συν(π) = -1$. Άρα:</p>
+          <div class="mathbox">$$y_Σ = -2A\,ημωt \;\Rightarrow\; υ_Σ = \frac{dy_Σ}{dt} = -2Aω\,συνωt$$</div>
+        </div></div>
+      <div class="step"><div class="gate">Με $ω=2π/T=2π/0{,}024=250π/3$ rad/s και $ωt_β = ω\cdot5T/12 = 5π/6$:</div><div class="mini"><button onclick="gate(this,0)">$υ_Σ = +ωA$</button><button onclick="gate(this,1)">$υ_Σ = \sqrt3\,ωA$</button><button onclick="gate(this,0)">$υ_Σ = 2ωA$</button></div>
+        <div class="step-body">
+          <p>Ακριβής υπολογισμός:</p>
+          <div class="mathbox">$$υ_Σ = -2Aω\,συν\frac{5π}{6} = -2Aω\left(-\frac{\sqrt3}{2}\right) = \sqrt3\,ωA$$</div>
+          <div class="mathbox">$$υ_Σ = \sqrt3\cdot\frac{250π}{3}\cdot0{,}2 = \frac{50π\sqrt3}{3} \approx 90{,}69\ \text{m/s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη όλων των βημάτων</button></div>
+    </div>
+    <div class="numq" data-q="G2" data-pts="6" data-ans="90.69" data-alt="52.36" data-tol="1"><label>υ_Σ =</label><input placeholder="m/s" aria-label="Ταχύτητα Σ"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Γ3 -->
+<article class="q" data-theme="G" data-q="G3" data-pts="6">
+  <div class="head"><span>Γ3</span><span>6 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Ζητούμενο</span><p>Σε πόσο χρόνο μετά την $t_β$ η ταχύτητα του Σ μηδενίζεται στιγμιαία για δεύτερη φορά;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Τη στιγμή $t_β$ ($ωt_β = 5π/6$) το Σ βρίσκεται στη θέση:</div><div class="mini"><button onclick="gate(this,1)">$y_Σ = -A$ (ανεβαίνει)</button><button onclick="gate(this,0)">$y_Σ = +A$</button><button onclick="gate(this,0)">$y_Σ = 0$</button></div>
+        <div class="step-body">
+          <p>$y_Σ = -2A\,ημ(5π/6) = -2A\cdot\frac{1}{2} = -A$. Και $υ_Σ = -2Aω\,συν(5π/6) = -2Aω(-\frac{\sqrt3}{2}) = +\sqrt3 Aω \gt 0$. <b>Κινείται προς τα πάνω.</b></p>
+        </div></div>
+      <div class="step"><div class="gate">Πρώτος μηδενισμός ταχύτητας (πάνω ακραία θέση $y=+2A$):</div><div class="mini"><button onclick="gate(this,0)">T/4</button><button onclick="gate(this,1)">$T/3$</button><button onclick="gate(this,0)">T/2</button></div>
+        <div class="step-body">
+          <p>Το Σ ξεκινά από $-A$ με $υ \gt 0$ και πηγαίνει στο $+2A$. Σε γωνία: από $ωt_β = 5π/6$ μέχρι $ωt = 3π/2$ (όπου $ημ=1$, $y=+2A$):</p>
+          <div class="mathbox">$$Δ(ωt) = \frac{3π}{2} - \frac{5π}{6} = \frac{9π-5π}{6} = \frac{4π}{6} = \frac{2π}{3}$$</div>
+          <div class="mathbox">$$t_1 = \frac{2π/3}{2π/T} = \frac{T}{3} = \frac{24}{3} = 8\ \text{ms}$$</div>
+        </div></div>
+      <div class="step"><div class="gate">Δεύτερος μηδενισμός (κάτω ακραία θέση $y=-2A$):</div><div class="mini"><button onclick="gate(this,1)">$t_2 = T/2$</button><button onclick="gate(this,0)">$t_2 = T/4$</button></div>
+        <div class="step-body">
+          <p>Από την πάνω στην κάτω ακραία θέση: μισή περίοδος.</p>
+          <div class="mathbox">$$t_2 = \frac{T}{2} = 12\ \text{ms}$$</div>
+          <div class="mathbox">$$Δt = t_1+t_2 = 8+12 = 20\ \text{ms} = 0{,}020\ \text{s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη όλων των βημάτων</button></div>
+    </div>
+    <div class="numq" data-q="G3" data-pts="6" data-ans="0.020" data-alt="0.022" data-tol="0.0006"><label>Δt =</label><input placeholder="s" aria-label="Χρονικό διάστημα"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Γ4 -->
+<article class="q" data-theme="G" data-q="G4" data-pts="6">
+  <div class="head"><span>Γ4</span><span>6 μονάδες (3 + 3)</span></div>
+  <div class="body">
+    <span class="lbl">Ζητούμενο</span>
+    <p>Να σχεδιάσεις το στιγμιότυπο του στάσιμου κύματος στην ίδια περιοχή, τη χρονική στιγμή που το Σ περνά από τη Θ.Ι. για δεύτερη φορά μετά την $t_β$. Στο στιγμιότυπο να δείξεις και τη φορά της ταχύτητας του σημείου Ο.</p>
+    <p class="study-only" style="font-size:.9rem">🎯 <b>Βρες τη στιγμή:</b> σύρε τον ολισθητή της προσομοίωσης Γ ώσπου το Σ να περνά από τη Θ.Ι. για <em>δεύτερη</em> φορά μετά το β και πάτησε «Αυτό είναι».</p>
+    <div class="numq study-only" data-q="G4" data-sub="a" data-pts="3" data-sim="G" data-ans="1" data-tol="0.04"><button class="kx-btn pri" onclick="checkSimPhase(this)">📍 Αυτό είναι το στιγμιότυπο</button><span class="fb"></span></div>
+    <p>Τη στιγμή αυτή η ταχύτητα του σημείου Ο έχει φορά:</p>
+    <div class="opts" data-sub="b" data-pts="3" data-correct="0" role="group" aria-label="Επιλογές Γ4">
+      <button class="opt" onclick="mc(this)">Προς τα πάνω (θετική)</button>
+      <button class="opt" onclick="mc(this)">Προς τα κάτω (αρνητική)</button>
+      <button class="opt" onclick="mc(this)">Είναι μηδέν</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p><b>Ποια είναι η ζητούμενη στιγμή;</b> Το Σ περνά από τη Θ.Ι. όταν $ημωt = 0$, δηλαδή $ωt = nπ$. Μετά το $t_β$ ($ωt_β = 5π/6$):</p>
+      <ul>
+        <li>1η φορά: $ωt = π$ → $t = T/2$</li>
+        <li>2η φορά: $ωt = 2π$ → $t = T$ (μία πλήρης περίοδος μετά την $t=0$)</li>
+      </ul>
+      <p><b>Μορφή στιγμιοτύπου:</b> Για $t = T$: $ημ(2π) = 0$ → <b>όλη η χορδή είναι ευθεία</b> πάνω στον άξονα $x'x$ (η χορδή περνά ταυτόχρονα από τη Θ.Ι.).</p>
+      <p><b>Φορά ταχύτητας Ο:</b> $υ_Ο = \frac{dy_O}{dt} = 2Aω\,συνωt = 2Aω\,συν(2π) = +2Aω \gt 0$. Άρα το Ο κινείται <b>προς τα πάνω</b>.</p>
+      <div class="fig"><svg viewBox="0 0 420 130" width="100%" role="img" aria-label="Στιγμιότυπο t=T">
+        <line x1="30" y1="60" x2="400" y2="60" stroke="#dc2626" stroke-width="3"/>
+        <circle cx="30" cy="60" r="4" fill="#0f172a"/><circle cx="120" cy="60" r="4" fill="#0f172a"/><circle cx="210" cy="60" r="4" fill="#0f172a"/><circle cx="300" cy="60" r="4" fill="#0f172a"/><circle cx="390" cy="60" r="4" fill="#0f172a"/>
+        <text x="22" y="85">Ο</text><text x="115" y="85">δεσμός</text><text x="205" y="85">Σ</text><text x="295" y="85">δεσμός</text><text x="385" y="85">Α</text>
+        <line x1="30" y1="55" x2="30" y2="20" stroke="#059669" stroke-width="2"/><polygon points="30,14 25,24 35,24" fill="#059669"/>
+        <line x1="210" y1="65" x2="210" y2="100" stroke="#059669" stroke-width="2"/><polygon points="210,106 205,96 215,96" fill="#059669"/>
+        <text x="120" y="120" font-size="11">λ/4 = 0,18 m</text><text x="300" y="120" font-size="11">3λ/4 = 0,54 m</text>
+      </svg></div>
+      <div class="res">Στιγμιότυπο: ευθεία χορδή · Ο ↑ · Σ ↓</div></div></details>
+  </div>
+</article>
+
+<!-- ================================================================
+     ΘΕΜΑ Δ
+     ================================================================ -->
+<div class="kx-tema"><span class="let" style="background:var(--D)">Δ</span><h2>ΘΕΜΑ Δ — Κύμα σε χορδή, ηχητική πηγή &amp; Ταλάντωση</h2><span class="pts">25 μονάδες</span></div>
+
+<article class="q" data-theme="D" data-q="D0" data-pts="0">
+  <div class="head"><span>Εκφώνηση</span><span>κοινή για Δ1–Δ6</span></div>
+  <div class="body">
+    <p>Πάνω σε μια οριζόντια τεντωμένη χορδή πολύ μεγάλου μήκους, προσανατολισμένη στη διεύθυνση του άξονα $x'x$, διαδίδεται προς τη θετική κατεύθυνση ένα κύμα μήκους κύματος $λ=10$ m, το οποίο δημιουργείται από μια πηγή που βρίσκεται στη θέση $x=0$ και ξεκινάει τη στιγμή $t=0$ να ταλαντώνεται με εξίσωση $ψ=2\,ημ(0{,}5πt)$ (S.I.). Σε απόσταση 100 m από την πηγή του κύματος, στη θέση $x=100$ m, έχει τοποθετηθεί μια μικροσυσκευή S αμελητέας μάζας και αμελητέων διαστάσεων, ώστε να μην επηρεάζει τη διάδοση του κύματος. Η οποία μπορεί να εκπέμπει ήχο συχνότητας $f_s=3393$ Hz. Για να ενεργοποιηθεί όμως πρέπει να αποκτήσει κατακόρυφη προς τα κάτω επιτάχυνση ίση με $-2{,}5$ m/s² (και από κει και πέρα παραμένει σε διαρκή λειτουργία).</p>
+    <p>Ένας δέκτης Α βρίσκεται ακίνητος στην ίδια κατακόρυφο με τη μικροσυσκευή και σε απόσταση 229 m από τη θέση όπου αρχικά ηρεμεί. Αν η ταχύτητα του ήχου είναι 342 m/s και το πλάτος του κύματος παραμένει σταθερό κατά τη διάρκεια της διάδοσής του:</p>
+    <p style="font-size:.88rem" class="mut">Δίνονται: $π^2 \approx 10$ και $\frac{\sqrt3}{2}π \approx 2{,}7$.</p>
+    <div class="sim">
+      <h3>🔬 Προσομοίωση: χρονογραμμή του Θέματος Δ</h3>
+      <canvas id="dl" width="700" height="320" role="img" aria-label="Χρονογραμμή Θέματος Δ"></canvas>
+      <div class="simctl">
+        <span>t =</span><input type="range" id="dlr" min="0" max="46" step="0.05" value="0" aria-label="Χρόνος"><span id="dll">0,0 s</span>
+        <button class="chip" onclick="simD.play()">▶/❚❚</button>
+        <button class="chip" onclick="simD.set(40)">t=40</button>
+        <button class="chip" onclick="simD.set(40.333)">S on</button>
+        <button class="chip" onclick="simD.set(41)">A ακούει</button>
+      </div>
+      <div class="simmsg" id="dlmsg"></div>
+    </div>
+  </div>
+</article>
+
+<!-- Δ1 -->
+<article class="q" data-theme="D" data-q="D1" data-pts="4">
+  <div class="head"><span>Δ1</span><span>4 μονάδες</span></div>
+  <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια είναι η εξίσωση του κύματος που παράγεται πάνω στη χορδή;</p>
+    <div class="opts" data-pts="4" data-correct="1" role="group" aria-label="Επιλογές Δ1">
+      <button class="opt" onclick="mc(this)">$ψ = 2\,ημ2π\left(\dfrac{t}{2} - \dfrac{x}{10}\right)$</button>
+      <button class="opt" onclick="mc(this)">$ψ = 2\,ημ2π\left(\dfrac{t}{4} - \dfrac{x}{10}\right)$</button>
+      <button class="opt" onclick="mc(this)">$ψ = 2\,ημ2π\left(\dfrac{t}{4} + \dfrac{x}{10}\right)$</button>
+    </div>
+    <details class="sol"><summary>Αναλυτική λύση</summary><div>
+      <p><b>Δεδομένα:</b> $ψ = 2\,ημ(0{,}5πt)$ → $A = 2$ m, $ω = 0{,}5π$ rad/s. $λ = 10$ m. Διάδοση προς $+x$.</p>
+      <p><b>Περίοδος:</b></p>
+      <div class="mathbox">$$T = \frac{2π}{ω} = \frac{2π}{0{,}5π} = 4\ \text{s}$$</div>
+      <p><b>Ταχύτητα διάδοσης:</b> $υ = λ/T = 10/4 = 2{,}5$ m/s.</p>
+      <p><b>Γενική μορφή κύματος προς $+x$:</b> $ψ = A\,ημ2π(t/T - x/λ) = 2\,ημ2π(t/4 - x/10)$.</p>
+      <div class="res">$ψ = 2\,ημ2π(t/4 - x/10)$ (S.I.)</div></div></details>
+  </div>
+</article>
+
+<!-- Δ2 -->
+<article class="q" data-theme="D" data-q="D2" data-pts="4">
+  <div class="head"><span>Δ2</span><span>4 μονάδες</span></div>
+  <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια χρονική στιγμή θα φτάσει το κύμα στη μικροσυσκευή;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Η ταχύτητα διάδοσης είναι:</div><div class="mini"><button onclick="gate(this,1)">2,5 m/s</button><button onclick="gate(this,0)">10 m/s</button><button onclick="gate(this,0)">40 m/s</button></div>
+        <div class="step-body">
+          <p>Από $υ = λ/T = 10/4 = 2{,}5$ m/s. Ο χρόνος για να διανύσει 100 m:</p>
+          <div class="mathbox">$$t_1 = \frac{x}{υ} = \frac{100}{2{,}5} = 40\ \text{s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη</button></div>
+    </div>
+    <div class="numq" data-q="D2" data-pts="4" data-ans="40" data-tol="0.1"><label>$t_1$ =</label><input placeholder="s" aria-label="Χρόνος άφιξης"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Δ3 -->
+<article class="q" data-theme="D" data-q="D3" data-pts="5">
+  <div class="head"><span>Δ3</span><span>5 μονάδες</span></div>
+  <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια στιγμή αρχίζει να εκπέμπει η μικροσυσκευή;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Μετά την $t_1=40$ s η S ταλαντώνεται με επιτάχυνση $a = -ω^2ψ$. Άρα $a = -2{,}5$ m/s² όταν:</div><div class="mini"><button onclick="gate(this,1)">$ψ = +1$ m</button><button onclick="gate(this,0)">$ψ = -1$ m</button><button onclick="gate(this,0)">$ψ = +2$ m</button></div>
+        <div class="step-body">
+          <p>$ω^2 = (0{,}5π)^2 = 0{,}25π^2 \approx 0{,}25\cdot10 = 2{,}5$ s⁻². Οπότε:</p>
+          <div class="mathbox">$$a = -ω^2 ψ \;\Rightarrow\; -2{,}5 = -2{,}5\,ψ \;\Rightarrow\; ψ = +1\ \text{m}$$</div>
+        </div></div>
+      <div class="step"><div class="gate">Η S ξεκινά από τη Θ.Ι. προς τα πάνω. Φτάνει πρώτη φορά στο $ψ = +1 = A/2$ μετά από:</div><div class="mini"><button onclick="gate(this,0)">T/4</button><button onclick="gate(this,1)">T/12</button><button onclick="gate(this,0)">T/6</button></div>
+        <div class="step-body">
+          <p>$ψ = 2\,ημ(ωt_S) = 1 \Rightarrow ημ(ωt_S) = 1/2 \Rightarrow ωt_S = π/6$ (πρώτη λύση, αφού ξεκινά από Θ.Ι. προς τα πάνω). Άρα:</p>
+          <div class="mathbox">$$t_S = \frac{π/6}{0{,}5π} = \frac{1}{3}\ \text{s}$$</div>
+          <div class="mathbox">$$t_2 = t_1 + t_S = 40 + \frac{1}{3} = \frac{121}{3}\ \text{s} \approx 40{,}33\ \text{s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη</button></div>
+    </div>
+    <div class="numq" data-q="D3" data-pts="5" data-ans="40.333" data-tol="0.02"><label>$t_2$ =</label><input placeholder="s (π.χ. 40,33)" aria-label="Χρόνος ενεργοποίησης"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Δ4 -->
+<article class="q" data-theme="D" data-q="D4" data-pts="4">
+  <div class="head"><span>Δ4</span><span>4 μονάδες</span></div>
+  <div class="body"><span class="lbl">Ζητούμενο</span><p>Από ποια στιγμή και έπειτα ο δέκτης αρχίζει να καταγράφει ηχητικό σήμα;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Τη στιγμή ενεργοποίησης η S είναι στο $ψ = +1$ m. Η απόσταση από τον Α είναι:</div><div class="mini"><button onclick="gate(this,0)">229 m</button><button onclick="gate(this,1)">228 m</button><button onclick="gate(this,0)">230 m</button></div>
+        <div class="step-body">
+          <p>Ο δέκτης Α είναι 229 m πάνω από την <em>αρχική</em> θέση (Θ.Ι.). Η S έχει μετατοπιστεί προς τα πάνω κατά 1 m, άρα η απόσταση είναι $229-1 = 228$ m.</p>
+        </div></div>
+      <div class="step"><div class="gate">Ο χρόνος που κάνει ο ήχος να φτάσει στον Α:</div><div class="mini"><button onclick="gate(this,1)">2/3 s</button><button onclick="gate(this,0)">1/3 s</button><button onclick="gate(this,0)">1 s</button></div>
+        <div class="step-body">
+          <div class="mathbox">$$Δt_{ήχου} = \frac{d}{υ_{ηχ}} = \frac{228}{342} = \frac{2}{3}\ \text{s}$$</div>
+          <div class="mathbox">$$t_3 = t_2 + Δt_{ήχου} = \frac{121}{3} + \frac{2}{3} = \frac{123}{3} = 41\ \text{s}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη</button></div>
+    </div>
+    <div class="numq" data-q="D4" data-pts="4" data-ans="41" data-tol="0.05"><label>$t_3$ =</label><input placeholder="s" aria-label="Χρόνος λήψης"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Δ5 — ΝΕΑ ΕΚΦΩΝΗΣΗ -->
+<article class="q" data-theme="D" data-q="D5" data-pts="4">
+  <div class="head"><span>Δ5</span><span>4 μονάδες</span></div>
+  <div class="body">
+    <span class="lbl">Ζητούμενο</span>
+    <p>Η συχνότητα $f_s = 3393$ Hz της πηγής, λόγω της ταχύτητάς της $υ$ ως προς τον αέρα, μεταβάλλεται σύμφωνα με τη σχέση: $f_A \approx 3393 + 10\cdot υ$ Hz. Ποια είναι η αρχική συχνότητα του ήχου που καταγράφει ο δέκτης;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Η ταχύτητα της S τη στιγμή ενεργοποίησης ($ωt_S=π/6$) είναι:</div><div class="mini"><button onclick="gate(this,1)">$υ_S = Aω\,συν(π/6) = \frac{\sqrt3}{2}π \approx 2{,}7$ m/s, προς τον Α</button><button onclick="gate(this,0)">$υ_S = Aω = π \approx 3{,}14$ m/s</button><button onclick="gate(this,0)">$υ_S = 0$</button></div>
+        <div class="step-body">
+          <p>$υ_S = \frac{dy}{dt} = Aω\,συν(ωt)$. Με $A=2$ m, $ω=0{,}5π$ rad/s, $ωt_S=π/6$:</p>
+          <div class="mathbox">$$υ_S = 2\cdot0{,}5π\cdot\frac{\sqrt3}{2} = \frac{\sqrt3}{2}π \approx 2{,}7\ \text{m/s}$$</div>
+          <p>Η S κινείται προς τα πάνω, δηλαδή <b>προς τον δέκτη Α</b> (που είναι πάνω).</p>
+        </div></div>
+      <div class="step"><div class="gate">Εφαρμόζουμε τη δοσμένη σχέση $f_A = 3393 + 10·υ$:</div><div class="mini"><button onclick="gate(this,1)">$f_A = 3393 + 10\cdot2{,}7 = 3420$ Hz</button><button onclick="gate(this,0)">$f_A = 3393 + 10\cdot3{,}14 \approx 3424$ Hz</button></div>
+        <div class="step-body">
+          <div class="mathbox">$$f_A = 3393 + 10\cdot2{,}7 = 3393 + 27 = 3420\ \text{Hz}$$</div>
+          <p><b>Προαιρετική Επαλήθευση με τη σχέση Doppler:</b> $\dfrac{342}{342-2{,}7}\cdot3393 = \dfrac{3420}{3393}\cdot3393 = 3420$ Hz. <b>Σωστό.</b></p>
+          
+          
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη</button></div>
+    </div>
+    <div class="numq" data-q="D5" data-pts="4" data-ans="3420" data-tol="3"><label>$f_A$ =</label><input placeholder="Hz" aria-label="Συχνότητα δέκτη"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- Δ6 -->
+<article class="q" data-theme="D" data-q="D6" data-pts="4">
+  <div class="head"><span>Δ6</span><span>4 μονάδες</span></div>
+  <div class="body"><span class="lbl">Ζητούμενο</span><p>Πόσο είναι το ελάχιστο πλάτος του κύματος, με την ίδια συχνότητα, που μπορεί να ενεργοποιήσει τη μικροσυσκευή;</p>
+    <div class="steps study-only">
+      <div class="step show"><div class="gate">Απαιτείται η μέγιστη επιτάχυνση να φτάνει τουλάχιστον τα 2,5 m/s². Δηλαδή:</div><div class="mini"><button onclick="gate(this,0)">$A \ge 0{,}5$ m</button><button onclick="gate(this,1)">$A \ge 1$ m</button><button onclick="gate(this,0)">$A \ge 2$ m</button></div>
+        <div class="step-body">
+          <p>Η μέγιστη επιτάχυνση ταλάντωσης είναι $|a|_{max} = ω^2 A$. Για να ενεργοποιηθεί η S, χρειάζεται κάποια στιγμή $|a| = 2{,}5$ m/s². Άρα:</p>
+          <div class="mathbox">$$ω^2 A_{min} = 2{,}5 \;\Rightarrow\; A_{min} = \frac{2{,}5}{2{,}5} = 1\ \text{m}$$</div>
+        </div></div>
+      <div class="revealall"><button onclick="revealSteps(this)">Αποκάλυψη</button></div>
+    </div>
+    <div class="numq" data-q="D6" data-pts="4" data-ans="1" data-tol="0.02"><label>$A_{min}$ =</label><input placeholder="m" aria-label="Ελάχιστο πλάτος"><button class="kx-btn pri" onclick="checkNum(this)">Έλεγχος</button><span class="fb"></span></div>
+  </div>
+</article>
+
+<!-- ================= ΤΕΛΙΚΟ ================= -->
+<div class="kx-final">
+  <p class="mut" style="font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase">Τελικό σκορ</p>
+  <div class="big"><span id="finTot">0</span><small style="font-size:1rem"> / 100</small></div>
+  <p id="finMsg"></p>
+</div>
+
+<details class="sol" id="breakdown" style="margin-bottom:24px">
+  <summary>Ανάλυση ανά ερώτηση</summary>
+  <div id="breakdownBody"></div>
+</details>
+
+<details class="sol" style="margin-bottom:24px"><summary>Πίνακας απαντήσεων</summary><div>
+<table class="kx-tab"><tr><th>Ερ.</th><th>Απάντηση</th></tr>
+<tr><td>Α1–Α4</td><td>δ, α, γ, α</td></tr><tr><td>Α5</td><td>Σ, Λ, Σ, Λ, Λ</td></tr>
+<tr><td>Β1</td><td>Λ, Σ, Σ, Σ ($υ=10$ m/s, $x_N=6$ m, $λ=4$ m, $a_{max}=10π^2$)</td></tr>
+<tr><td>Β2</td><td>Λ, Σ, Σ ($λ=4$ m, $2A=6$ cm, $υ_{max}=2π$ cm/s)</td></tr>
+<tr><td>Β3</td><td>Λ, Λ, Σ</td></tr><tr><td>Β4</td><td>Ι→α · 1→α, 2→ε, 3→β, 4→γ, 5→δ</td></tr>
+<tr><td>Γ1</td><td>$υ = 30$ m/s</td></tr><tr><td>Γ2</td><td>$υ_Σ = \sqrt3\,ωA \approx 90{,}7$ m/s</td></tr><tr><td>Γ3</td><td>$Δt = 0{,}020$ s</td></tr><tr><td>Γ4</td><td>ευθεία χορδή, Ο ↑ · Σ ↓</td></tr>
+<tr><td>Δ1</td><td>$ψ=2ημ2π(t/4-x/10)$</td></tr><tr><td>Δ2–Δ4</td><td>40 s · 121/3 s ≈ 40,33 s · 41 s</td></tr><tr><td>Δ5</td><td>3420 Hz</td></tr><tr><td>Δ6</td><td>$A_{min}=1$ m</td></tr></table>
+</div></details>
+
+</div><!-- /#kx-rest -->
+
+</div><!-- /#kx-app -->
+<script>
+(function(){
+'use strict';
+/* ================= STATE ================= */
+var APP=document.getElementById('kx-app');
+var earned={};
+var TOTAL={A:25,B:25,G:25,D:25};
+var STORAGE_KEY='kx-progress-v5';   /* ΝΕΟ v4 — καθαρή εκκίνηση */
+var REST_KEY='kx-rest-revealed-v4';  /* Για την κατάσταση του «Συνεχίστε» */
+var WARNED={};
+var timerId=null, remain=3*3600;
+
+function themeOf(el){ return el.closest('.q').dataset.theme; }
+function award(key,theme,pts){ if(pts>0) earned[key]={theme:theme,pts:pts}; else delete earned[key]; refresh(); saveProgress(); }
+
+function refresh(){
+  var s={A:0,B:0,G:0,D:0};
+  Object.keys(earned).forEach(function(k){ s[earned[k].theme]+=earned[k].pts; });
+  ['A','B','G','D'].forEach(function(t){
+    s[t]=Math.min(TOTAL[t],Math.round(s[t]*10)/10);
+    document.getElementById('s'+t).textContent=s[t];
+    document.getElementById('b'+t).style.width=(s[t]/TOTAL[t]*100)+'%';
+  });
+  var tot=Math.round((s.A+s.B+s.G+s.D)*10)/10;
+  document.getElementById('sTot').textContent=tot;
+  document.getElementById('finTot').textContent=tot;
+  var m='Δεν έχει ξεκινήσει η αξιολόγηση.';
+  if(tot>0) m=tot>=85?'🌟 Εξαιρετική επίδοση!':tot>=70?'🎯 Πολύ καλή επίδοση!':tot>=50?'👍 Καλή προσπάθεια!':'📚 Χρειάζεται περισσότερη μελέτη.';
+  document.getElementById('finMsg').textContent=m;
+  refreshBreakdown();
+}
+
+function refreshBreakdown(){
+  var body=document.getElementById('breakdownBody');
+  if(!body) return;
+  var html='<table class="kx-tab"><tr><th>Ερ.</th><th>Κατάσταση</th><th>Βαθμοί</th></tr>';
+  APP.querySelectorAll('.q[data-q]').forEach(function(card){
+    var q=card.dataset.q, pts=+card.dataset.pts||0;
+    if(pts===0) return;
+    var got=0, answered=false;
+    Object.keys(earned).forEach(function(k){
+      if(k===q||k.indexOf(q+'-')===0){ got+=earned[k].pts; answered=true; }
+    });
+    var color=got>=pts?'#059669':got>0?'#d97706':'#94a3b8';
+    html+='<tr><td>'+q+'</td><td style="color:'+color+'">'+(answered?(got>=pts?'✓ Σωστά':got>0?'~ Μερικώς':'✗ Λάθος'):'— Δεν απαντήθηκε')+'</td><td>'+got.toFixed(1)+'/'+pts+'</td></tr>';
+  });
+  html+='</table>';
+  body.innerHTML=html;
+}
+
+/* ================= REVEAL REST («Συνεχίστε») ================= */
+window.revealRest=function(){
+  var rest=document.getElementById('kx-rest');
+  var gate=document.getElementById('kx-continue-gate');
+  if(rest){ rest.style.display='block'; }
+  if(gate){ gate.style.display='none'; }
+  try{ localStorage.setItem(REST_KEY,'1'); }catch(e){}
+  
+  /* ▼▼▼ ΝΕΟ: Ξανα-επεξεργασία MathJax ▼▼▼ */
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([rest]).catch(function(err){ /* αγνόησε */ });
+  }
+  /* ▲▲▲ ΤΕΛΟΣ ΝΕΟΥ ▲▲▲ */
+  
+  setTimeout(function(){ if(window.redrawAll) redrawAll(); }, 100);
+};
+function applyRestState(){
+  try{
+    if(localStorage.getItem(REST_KEY)==='1'){
+      var rest=document.getElementById('kx-rest');
+      var gate=document.getElementById('kx-continue-gate');
+      if(rest) rest.style.display='block';
+      if(gate) gate.style.display='none';
+    }
+  }catch(e){}
+}
+
+
+/* ================= PERSISTENCE ================= */
+function saveProgress(){
+  try{
+    var state={ earned:earned, answers:{}, mode:APP.dataset.mode, dark:APP.classList.contains('dark'), remain:remain, ts:Date.now() };
+    APP.querySelectorAll('.q').forEach(function(card){
+      var q=card.dataset.q;
+      var mc=card.querySelector('.opt.ok, .opt.bad');
+      if(mc){ var opts=[].slice.call(mc.parentNode.children); state.answers[q+'-mc']={idx:opts.indexOf(mc)}; }
+      card.querySelectorAll('.tfrow').forEach(function(row){
+        var sel=row.querySelector('.tf.ok, .tf.bad');
+        if(sel) state.answers[q+'-'+row.dataset.sub]={val:sel.textContent.charAt(0)};
+      });
+      card.querySelectorAll('.numq').forEach(function(box){
+        var inp=box.querySelector('input');
+        if(inp&&inp.disabled&&inp.value) state.answers[box.dataset.q+(box.dataset.sub?'-'+box.dataset.sub:'')]={val:inp.value,ok:box.classList.contains('ok')};
+      });
+      card.querySelectorAll('.match select').forEach(function(s,i){ if(s.value) state.answers[q+'-match-'+i]={val:s.value}; });
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){ /* quota */ }
+}
+
+function loadProgress(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+    var s=JSON.parse(raw);
+    if(!s.earned) return false;
+    earned=s.earned;
+    Object.keys(s.answers||{}).forEach(function(k){
+      var a=s.answers[k];
+      if(k.indexOf('-mc')>-1){
+        var qid=k.replace('-mc',''); var card=APP.querySelector('.q[data-q="'+qid+'"]');
+        if(card && typeof a.idx==='number' && a.idx>=0){
+          var opts=card.querySelectorAll('.opt');
+          if(opts[a.idx]){
+            var box=opts[a.idx].closest('.opts');
+            var correct=+(box.dataset.correct!==undefined?box.dataset.correct:card.dataset.correct);
+            opts.forEach(function(o,i){ o.disabled=true; if(i===correct) o.classList.add('ok'); else if(i===a.idx) o.classList.add('bad'); });
+          }
+        }
+      } else if(k.indexOf('-match-')>-1){
+        var parts=k.split('-match-'); var card=APP.querySelector('.q[data-q="'+parts[0]+'"]');
+        if(card){ var sels=card.querySelectorAll('.match select'); if(sels[+parts[1]]){ sels[+parts[1]].value=a.val; sels[+parts[1]].classList.add(sels[+parts[1]].dataset.correct===a.val?'ok':'bad'); } }
+      } else if(k.indexOf('-')>-1){
+        var parts=k.split('-'); var card=APP.querySelector('.q[data-q="'+parts[0]+'"]');
+        if(card){ var row=card.querySelector('.tfrow[data-sub="'+parts[1]+'"]');
+          if(row){ row.querySelectorAll('.tf').forEach(function(b){ b.disabled=true; if(b.textContent.charAt(0)===a.val) b.classList.add(a.val===row.dataset.ans?'ok':'bad'); }); if(a.val!==row.dataset.ans){ row.querySelectorAll('.tf').forEach(function(b){ if(b.textContent.charAt(0)===row.dataset.ans.charAt(0)) b.classList.add('ok'); }); } }
+        }
+      } else {
+        var card=APP.querySelector('.q[data-q="'+k+'"]');
+        if(card){ var box=card.querySelector('.numq'); if(box){ var inp=box.querySelector('input'); if(inp&&a.val){ inp.value=a.val; inp.disabled=true; box.classList.add(a.ok?'ok':'bad'); } } }
+      }
+    });
+    if(s.dark) APP.classList.add('dark');
+    if(s.mode) setMode(s.mode, true);
+    if(s.remain&&s.mode==='exam'){ remain=s.remain; tick(); timerId=setInterval(tick,1000); }
+    refresh(); redrawAll();
+    return true;
+  }catch(e){ return false; }
+}
+
+window.addEventListener('beforeunload', saveProgress);
+
+/* ================= MODE / TIMER ================= */
+window.setMode=function(mode, skipReset){
+  APP.dataset.mode=mode;
+  document.getElementById('mStudy').classList.toggle('on',mode==='study');
+  document.getElementById('mExam').classList.toggle('on',mode==='exam');
+  document.getElementById('mStudy').setAttribute('aria-selected',mode==='study');
+  document.getElementById('mExam').setAttribute('aria-selected',mode==='exam');
+  APP.querySelectorAll('details.sol').forEach(function(d){ d.open=false; });
+  if(mode==='exam'){
+    if(!skipReset) remain=3*3600;
+    tick();
+    if(timerId) clearInterval(timerId);
+    timerId=setInterval(tick,1000);
+  } else if(timerId){ clearInterval(timerId); timerId=null; }
+  saveProgress();
+};
+
+function tick(){
+  remain--;
+  if(remain>=0){
+    var h=Math.floor(remain/3600),mn=Math.floor(remain%3600/60),sc=remain%60;
+    var el=document.getElementById('timer');
+    el.textContent=[h,mn,sc].map(function(v){return (v>9?'':'0')+v;}).join(':');
+    el.classList.remove('warn','danger');
+    if(remain<=300) el.classList.add('danger');
+    else if(remain<=600) el.classList.add('warn');
+  } else { submitExam(); }
+}
+
+window.submitExam=function(){
+  /* Εφάρμοσε όλες τις αποθηκευμένες απαντήσεις */
+  if(window.__examAnswers){
+    Object.keys(window.__examAnswers).forEach(function(key){
+      var a = window.__examAnswers[key];
+      if(a.idx !== undefined){
+        /* MC */
+        award(key, a.theme, a.idx===a.correct ? a.pts : 0);
+      } else if(a.val !== undefined && a.ans !== undefined){
+        /* TF */
+        award(key, a.theme, a.val===a.ans ? a.pts : 0);
+      } else if(a.ok !== undefined){
+        /* Numeric */
+        award(key, a.theme, a.ok ? a.pts : 0);
+      }
+    });
+    window.__examAnswers = {};
+  }
+  setMode('study');
+  APP.querySelectorAll('details.sol').forEach(function(d){ d.open=true; });
+  document.querySelector('.kx-final').scrollIntoView({behavior:'smooth'});
+  saveProgress();
+};
+
+window.toggleDark=function(){ APP.classList.toggle('dark'); redrawAll(); saveProgress(); };
+
+/* ================= MC ================= */
+window.mc=function(btn){
+  var box=btn.closest('.opts'), card=btn.closest('.q');
+  var correct=+(box.dataset.correct!==undefined?box.dataset.correct:card.dataset.correct);
+  var pts=+(box.dataset.pts||card.dataset.pts);
+  var key=card.dataset.q+(box.dataset.sub?'-'+box.dataset.sub:'');
+  var opts=[].slice.call(box.querySelectorAll('.opt')), idx=opts.indexOf(btn);
+  var isExam = APP.dataset.mode==='exam';
+  
+  if(isExam){
+    /* ΕΞΕΤΑΣΗ: Αποθήκευσε την απάντηση, αλλά μην δείξεις τίποτα */
+    opts.forEach(function(o){ o.classList.remove('ok','bad'); });
+    /* Σήμανε την επιλογή του μαθητή με ένα ουδέτερο στυλ */
+    btn.classList.add('selected');
+    btn.dataset.selected = idx;
+    /* Αποθήκευσε προσωρινά (για υποβολή) */
+    window.__examAnswers = window.__examAnswers || {};
+    window.__examAnswers[key] = { idx: idx, correct: correct, pts: pts, theme: themeOf(btn) };
+  } else {
+    /* ΜΕΛΕΤΗ: Δείξε αμέσως */
+    opts.forEach(function(o,i){ o.classList.remove('ok','bad'); if(i===correct) o.classList.add('ok'); else if(o===btn) o.classList.add('bad'); o.disabled=true; });
+    award(key,themeOf(btn),idx===correct?pts:0);
+    var d=card.querySelector('details.sol'); if(d) d.open=true;
+  }
+};
+
+/* ================= TF ================= */
+window.tf=function(btn,val){
+  var row=btn.closest('.tfrow'), card=btn.closest('.q');
+  var ok=val===row.dataset.ans, pts=+row.dataset.pts;
+  var key=card.dataset.q+'-'+row.dataset.sub;
+  var isExam = APP.dataset.mode==='exam';
+  
+  if(isExam){
+    /* ΕΞΕΤΑΣΗ */
+    row.querySelectorAll('.tf').forEach(function(b){ b.classList.remove('ok','bad','selected'); });
+    btn.classList.add('selected');
+    btn.dataset.selected = 1;
+    window.__examAnswers = window.__examAnswers || {};
+    window.__examAnswers[key] = { val: val, ans: row.dataset.ans, pts: pts, theme: themeOf(btn) };
+  } else {
+    /* ΜΕΛΕΤΗ */
+    row.querySelectorAll('.tf').forEach(function(b){ b.disabled=true; });
+    btn.classList.add(ok?'ok':'bad');
+    if(!ok){ row.querySelectorAll('.tf').forEach(function(b){ if(b.textContent.charAt(0)===row.dataset.ans.charAt(0)) b.classList.add('ok'); }); }
+    award(key,themeOf(btn),ok?pts:0);
+    var w=row.querySelector('.why'); if(w) w.open=true;
+  }
+};
+
+/* ================= MATCH ================= */
+window.checkMatch=function(id,q,sub,ptsEach){
+  var sels=document.querySelectorAll('#'+id+' select'), n=0;
+  sels.forEach(function(s){ var ok=s.value===s.dataset.correct; s.classList.remove('ok','bad'); s.classList.add(ok?'ok':'bad'); if(ok) n++; });
+  document.getElementById(id+'-fb').textContent=n+'/'+sels.length+' σωστές';
+  award(q+'-'+sub,'B',n*(ptsEach/sels.length));
+};
+
+/* ================= NUMERIC ================= */
+function parseNum(v){
+  v=String(v).trim().replace(',','.');
+  v=v.replace(/π/gi,'Math.PI').replace(/\bpi\b/gi,'Math.PI')
+     .replace(/sqrt\(([^)]+)\)/gi,'Math.sqrt($1)')
+     .replace(/√\(([^)]+)\)/g,'Math.sqrt($1)')
+     .replace(/√(\d+(\.\d+)?)/g,'Math.sqrt($1)')
+     .replace(/\^/g,'**');
+  try{ var r=Function('"use strict";return ('+v+')')(); return isFinite(r)?r:NaN; }catch(e){ return NaN; }
+}
+
+window.checkNum=function(btn){
+  var box=btn.closest('.numq'), card=btn.closest('.q'), inp=box.querySelector('input'), fb=box.querySelector('.fb');
+  var val=parseNum(inp.value), ans=+box.dataset.ans, alt=box.dataset.alt?+box.dataset.alt:null, tol=+box.dataset.tol;
+  if(isNaN(val)){ fb.textContent='Δώσε αριθμό.'; return; }
+  var ok=Math.abs(val-ans)<=tol||(alt!==null&&Math.abs(val-alt)<=tol);
+  var key=box.dataset.q+(box.dataset.sub?'-'+box.dataset.sub:'');
+  var isExam = APP.dataset.mode==='exam';
+  
+  if(isExam){
+    /* ΕΞΕΤΑΣΗ */
+    inp.disabled = true;
+    btn.disabled = true;
+    window.__examAnswers = window.__examAnswers || {};
+    window.__examAnswers[key] = { val: inp.value, ok: ok, pts: +box.dataset.pts, theme: themeOf(btn) };
+  } else {
+    /* ΜΕΛΕΤΗ */
+    box.classList.remove('ok','bad'); box.classList.add(ok?'ok':'bad');
+    if(ok){
+      fb.textContent='✓ Σωστά! +'+pts;
+      award(key, themeOf(btn), pts);
+    } else {
+      fb.textContent='✗ Όχι ακριβώς.';
+      award(key, themeOf(btn), 0);
+    }
+  }
+};
+
+window.markOpen=function(btn){
+  var box=btn.closest('.numq'), on=btn.dataset.on==='1';
+  btn.dataset.on=on?'0':'1'; btn.classList.toggle('pri',!on);
+  award(box.dataset.q,themeOf(btn),on?0:+box.dataset.pts);
+};
+
+/* ================= STEPS ================= */
+window.gate=function(btn,isCorrect){
+  var step=btn.closest('.step');
+  if(isCorrect){
+    step.querySelectorAll('.mini button').forEach(function(b){ b.disabled=true; });
+    btn.classList.add('ok');
+    step.querySelector('.step-body').classList.add('show');
+    var nx=step.nextElementSibling;
+    if(nx&&nx.classList.contains('step')) nx.classList.add('show');
+  } else { btn.classList.add('bad'); btn.disabled=true; }
+  if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([step]);
+};
+
+window.revealSteps=function(btn){
+  var steps=btn.closest('.steps'), card=btn.closest('.q');
+  steps.querySelectorAll('.step').forEach(function(s){ s.classList.add('show'); s.querySelector('.step-body').classList.add('show'); });
+  card.dataset.revealed='1'; btn.disabled=true; btn.textContent='Αποκαλύφθηκε (μισές μονάδες στον έλεγχο)';
+};
+
+/* ================= RESET ================= */
+window.resetAll=function(){
+  if(!confirm('Σίγουρα θέλεις να μηδενίσεις όλες τις απαντήσεις και τη βαθμολογία;')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(REST_KEY); }catch(e){}
+  WARNED={}; earned={}; refresh();
+  APP.querySelectorAll('.opt,.tf,.mini button').forEach(function(b){ b.disabled=false; b.classList.remove('ok','bad'); });
+  APP.querySelectorAll('.numq').forEach(function(b){
+    b.classList.remove('ok','bad');
+    var i=b.querySelector('input'); if(i){ i.value=''; i.disabled=false; }
+    var f=b.querySelector('.fb'); if(f&&!b.dataset.open) f.textContent='';
+    b.querySelectorAll('button').forEach(function(x){ x.disabled=false; if(b.dataset.open){ x.dataset.on='0'; x.classList.remove('pri'); } });
+  });
+  APP.querySelectorAll('.match select').forEach(function(s){ s.value=''; s.classList.remove('ok','bad'); });
+  APP.querySelectorAll('.step-body').forEach(function(s){ s.classList.remove('show'); });
+  APP.querySelectorAll('.step').forEach(function(s){ if(s!==s.parentNode.querySelector('.step')) s.classList.remove('show'); });
+  APP.querySelectorAll('.q').forEach(function(c){ delete c.dataset.revealed; });
+  APP.querySelectorAll('.revealall button').forEach(function(b){ b.disabled=false; b.textContent='Αποκάλυψη όλων των βημάτων'; });
+  APP.querySelectorAll('details').forEach(function(d){ d.open=false; });
+  APP.classList.remove('dark');
+  /* Επαναφορά «Συνεχίστε» */
+  var rest=document.getElementById('kx-rest');
+  var gate=document.getElementById('kx-continue-gate');
+  if(rest) rest.style.display='none';
+  if(gate) gate.style.display='';
+  if(APP.dataset.mode==='exam') setMode('exam');
+};
+/* ================= KEYBOARD ================= */
+document.addEventListener('keydown', function(e){
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key>='1'&&e.key<='4'){
+    var cards=[].slice.call(APP.querySelectorAll('.q')).filter(function(c){
+      var r=c.getBoundingClientRect(); return r.top>=0&&r.top<window.innerHeight*0.6&&r.height>0;
+    });
+    var card=cards[0];
+    if(card){ var opts=card.querySelectorAll('.opt:not([disabled])'); var i=+e.key-1; if(opts[i]){ opts[i].click(); e.preventDefault(); } }
+  }
+  if(e.key==='σ'||e.key==='Σ'||e.key==='s'||e.key==='S'){
+    var rows=[].slice.call(APP.querySelectorAll('.tfrow')).filter(function(r){ var rect=r.getBoundingClientRect(); return rect.top>=0&&rect.top<window.innerHeight*0.6; });
+    if(rows[0]){ var b=rows[0].querySelectorAll('.tf')[0]; if(b&&!b.disabled) b.click(); }
+  }
+  if(e.key==='λ'||e.key==='Λ'||e.key==='l'||e.key==='L'){
+    var rows2=[].slice.call(APP.querySelectorAll('.tfrow')).filter(function(r){ var rect=r.getBoundingClientRect(); return rect.top>=0&&rect.top<window.innerHeight*0.6; });
+    if(rows2[0]){ var b=rows2[0].querySelectorAll('.tf')[1]; if(b&&!b.disabled) b.click(); }
+  }
+  if(e.key==='Enter'&&APP.dataset.mode==='exam'){ submitExam(); }
+});
+
+/* ================= HELPERS CANVAS (HiDPI) ================= */
+function ctxOf(id){
+  var c=document.getElementById(id);
+  if(!c) return null;
+  var logicalW=+c.dataset.logicalW||c.width;
+  var logicalH=+c.dataset.logicalH||c.height;
+  if(!c.dataset.hidpi){
+    c.dataset.logicalW=logicalW;
+    c.dataset.logicalH=logicalH;
+    var dpr=window.devicePixelRatio||1;
+    c.width=logicalW*dpr;
+    c.height=logicalH*dpr;
+    c.style.width='100%';
+    c.style.height='auto';
+    c.style.aspectRatio=logicalW+' / '+logicalH;
+    var g=c.getContext('2d');
+    g.scale(dpr,dpr);
+    c.dataset.hidpi='1';
+  }
+  return {c:c, g:c.getContext('2d'), W:logicalW, H:logicalH};
+}
+function ink(){ return APP.classList.contains('dark')?'#e2e8f0':'#0f172a'; }
+function grid(){ return APP.classList.contains('dark')?'#1e293b':'#e2e8f0'; }
+function arrow(g,x1,y1,x2,y2,col){ g.strokeStyle=col;g.fillStyle=col;g.lineWidth=2;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();var a=Math.atan2(y2-y1,x2-x1);g.beginPath();g.moveTo(x2,y2);g.lineTo(x2-9*Math.cos(a-.5),y2-9*Math.sin(a-.5));g.lineTo(x2-9*Math.cos(a+.5),y2-9*Math.sin(a+.5));g.closePath();g.fill(); }
+
+var players={};
+function makePlayer(name,slider,step,max,onval){
+  return function(){
+    if(players[name]){ clearInterval(players[name]); players[name]=null; return; }
+    players[name]=setInterval(function(){
+      var v=+slider.value+step; if(v>max) v=0;
+      slider.value=v; onval(v);
+    },40);
+  };
+}
+
+/* ================= SVG A2 ================= */
+window.drawA2=function(ph){
+  var p=document.getElementById('a2w'); if(!p) return;
+  var d='',pts=document.getElementById('a2pts'); pts.innerHTML='';
+  for(var x=10;x<=410;x+=4){
+    var y=75-45*Math.sin(2*Math.PI*((x-10)/200) + 2*Math.PI*ph);
+    d+=(x===10?'M':'L')+x+' '+y.toFixed(1)+' ';
+  }
+  p.setAttribute('d',d);
+  if(!document.getElementById('a2-arrowhead')){
+    pts.insertAdjacentHTML('afterbegin',
+      '<defs><marker id="a2-arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">'+
+      '<path d="M0,0 L10,5 L0,10 L3,5 Z" fill="#059669"/></marker></defs>');
+  }
+  var MAX_LEN=40, MIN_LEN=4;
+  [[200,'\u0391'],[300,'\u0392']].forEach(function(q){
+    var x=q[0];
+    var theta = 2*Math.PI*((x-10)/200) + 2*Math.PI*ph;
+    var y = 75 - 45*Math.sin(theta);
+    var vPhys = 45 * (2*Math.PI/200) * Math.cos(theta);
+    var vAbs = Math.abs(vPhys) / (45 * 2*Math.PI/200);
+    pts.innerHTML+='<circle cx="'+x+'" cy="'+y.toFixed(1)+'" r="5" fill="#0f172a"/>'+
+                   '<text x="'+(x+8)+'" y="'+(y-8).toFixed(1)+'">'+q[1]+'</text>';
+    if(vAbs > 0.05 && ph > 0.001){
+      var len = MIN_LEN + (MAX_LEN - MIN_LEN) * vAbs;
+      var y2 = y - len * Math.sign(vPhys);
+      pts.innerHTML+='<line x1="'+x+'" y1="'+y.toFixed(1)+'" x2="'+x+'" y2="'+y2.toFixed(1)+'" '+
+                     'stroke="#059669" stroke-width="2.5" marker-end="url(#a2-arrowhead)"/>';
+    }
+  });
+};
+window.animA2=makePlayer('a2',document.getElementById('a2t'),0.01,1,drawA2);
+
+/* ================= SVG B3 ================= */
+window.drawB3=function(ph){
+  var r=document.getElementById('b3r'); if(!r) return;
+  var b=document.getElementById('b3b'),s=document.getElementById('b3s'),lam=140,dr='',db='',ds='';
+  for(var x=10;x<=450;x+=3){
+    var k=2*Math.PI*(x-10)/lam;
+    var yr=45*Math.sin(k-2*Math.PI*ph), yb=-45*Math.sin(k+2*Math.PI*ph);
+    dr+=(x===10?'M':'L')+x+' '+(85-yr).toFixed(1)+' ';
+    db+=(x===10?'M':'L')+x+' '+(85-yb).toFixed(1)+' ';
+    ds+=(x===10?'M':'L')+x+' '+(85-yr-yb).toFixed(1)+' ';
+  }
+  r.setAttribute('d',dr); b.setAttribute('d',db); s.setAttribute('d',ds);
+  s.style.display=document.getElementById('b3sum').checked?'block':'none';
+  var g=document.getElementById('b3pts'); g.innerHTML='';
+  [[10,'\u039B'],[10+lam/4,'\u039A'],[10+lam*0.9,'\u039C'],[10+lam*1.15,'\u039D']].forEach(function(q){
+    g.innerHTML+='<circle cx="'+q[0]+'" cy="85" r="4" fill="#0f172a"/><text x="'+(q[0]-4)+'" y="105">'+q[1]+'</text>';
+  });
+};
+window.animB3=makePlayer('b3',document.getElementById('b3t'),0.01,1,drawB3);
+
+/* ================= STANDING WAVE SIM ================= */
+function StandingWave(cfg){
+  var o=ctxOf(cfg.canvas); if(!o) return null;
+  var self={phase:cfg.phase||0};
+  var sl=document.getElementById(cfg.slider), lb=document.getElementById(cfg.label);
+  var W=o.W, H=o.H, pad=60, mid=H/2, sx=(W-2*pad)/cfg.xmax, sy=(H/2-40)/cfg.A2;
+  function y(x,ph){ return cfg.A2*Math.cos(2*Math.PI*x/cfg.lam)*Math.sin(2*Math.PI*ph); }
+
+ function curve(ph,col,w,dash,label,labelDx,labelFont){
+  o.g.strokeStyle=col; o.g.lineWidth=w; o.g.setLineDash(dash||[]); o.g.beginPath();
+  var bestY=Infinity, bestX=0;
+  for(var i=0;i<=300;i++){
+    var x=cfg.xmax*i/300;
+    var px=pad+x*sx, py=mid-y(x,ph)*sy;
+    if(i===0) o.g.moveTo(px,py); else o.g.lineTo(px,py);
+    if(py<bestY){ bestY=py; bestX=px; }
+  }
+  o.g.stroke(); o.g.setLineDash([]);
+  if(label){
+    o.g.fillStyle=col;
+    o.g.font='bold '+(labelFont||12)+'px sans-serif';   /* ← ΝΕΟ */
+    o.g.textAlign='center';
+    o.g.fillText(label, bestX + (labelDx||0), bestY-8); /* ← ΝΕΟ */
+    o.g.textAlign='left';
+  }
+}
+
+  self.draw=function(){
+    var g=o.g, ph=self.phase; g.clearRect(0,0,W,H);
+
+    g.strokeStyle=grid(); g.lineWidth=1;
+    var stepGrid=cfg.grid||1;
+    for(var i=0;i<=cfg.xmax+1e-9;i+=stepGrid){
+      var px=pad+i*sx;
+      g.beginPath(); g.moveTo(px,mid-(H/2-30)); g.lineTo(px,mid+(H/2-30)); g.stroke();
+      g.fillStyle=ink(); g.font='11px sans-serif';
+      g.fillText((Math.round(i*100)/100).toString().replace('.',','),px-6,mid+(H/2-30)+16);
+    }
+
+    g.strokeStyle=ink(); g.lineWidth=1.5;
+    g.beginPath(); g.moveTo(pad-10,mid); g.lineTo(W-pad+15,mid); g.stroke();
+    g.fillStyle=ink(); g.font='bold 12px sans-serif';
+    g.fillText('x (m)', W-pad-10, mid-8);
+
+    g.beginPath(); g.moveTo(pad,mid-(H/2-30)); g.lineTo(pad,mid+(H/2-30)); g.stroke();
+    if(cfg.yLabel){
+      g.save();
+      g.translate(pad-42, mid-(H/2-40));
+      g.fillStyle=ink(); g.font='bold 12px sans-serif';
+      g.fillText(cfg.yLabel, 0, 0);
+      g.restore();
+    }
+    if(cfg.yMaxLabel && cfg.yMaxValue){
+      g.fillStyle=ink(); g.font='bold 12px sans-serif';
+      g.fillText(cfg.yMaxLabel, pad-30, mid-cfg.yMaxValue*sy+4);
+      g.strokeStyle='#cbd5e1'; g.setLineDash([3,3]); g.lineWidth=1;
+      g.beginPath(); g.moveTo(pad-2, mid-cfg.yMaxValue*sy); g.lineTo(W-pad, mid-cfg.yMaxValue*sy); g.stroke();
+      g.setLineDash([]);
+    }
+    g.fillStyle=ink(); g.font='11px sans-serif';
+    g.fillText('0', pad-14, mid+4);
+
+    curve(0.25,'#cbd5e1',1,[4,4],'');
+    curve(0.75,'#cbd5e1',1,[4,4],'');
+
+   (cfg.ghosts||[]).forEach(function(gh){
+  curve(gh.ph, gh.col, 2, gh.dash||[7,4], gh.label||'', gh.labelDx, gh.labelFont);
+});
+
+   (cfg.extremes||[]).forEach(function(e){
+  curve(e.ph, e.col, 1.2, [2,3], '');
+  var yy=mid-y(cfg.lam/2,e.ph)*sy;
+  g.fillStyle=e.col;
+  g.font='bold '+(cfg.extremeFont||12)+'px sans-serif';   /* ← ΝΕΟ */
+  g.fillText(e.name, pad+cfg.lam/2*sx+8, yy);
+});
+
+    curve(ph,'#2563eb',3,[],'');
+
+    for(var n=0;n<=cfg.xmax/(cfg.lam/4)+1e-9;n++){
+      var x=n*cfg.lam/4; if(x>cfg.xmax+1e-9) break;
+      var px2=pad+x*sx;
+      g.fillStyle=(n%2===1)?'#dc2626':'#059669';
+      g.beginPath(); g.arc(px2,mid,3.5,0,7); g.fill();
+    }
+
+    if(cfg.mark){
+      var mx=cfg.mark.x, px3=pad+mx*sx, py3=mid-y(mx,ph)*sy;
+      g.fillStyle='#0f172a'; if(APP.classList.contains('dark')) g.fillStyle='#fff';
+      g.beginPath(); g.arc(px3,py3,6,0,7); g.fill();
+      g.fillStyle=ink(); g.font='bold 13px sans-serif';
+      g.fillText(cfg.mark.name, px3+9, py3-9);
+      var v=cfg.A2*Math.cos(2*Math.PI*mx/cfg.lam)*Math.cos(2*Math.PI*ph);
+      if(Math.abs(v)>cfg.A2*0.05) arrow(g,px3,py3,px3,py3-v/cfg.A2*45,'#059669');
+    }
+
+    if(cfg.title){
+      g.fillStyle=ink(); g.font='11px sans-serif';
+      g.fillText(cfg.title, pad+6, 16);
+    }
+
+    if(lb) lb.textContent=(Math.round(ph*1000)/1000).toString().replace('.',',');
+  };
+
+  self.set=function(p){ self.phase=p; sl.value=p; self.draw(); };
+  sl.addEventListener('input',function(){ self.phase=+sl.value; self.draw(); });
+  self.play=makePlayer(cfg.canvas, sl, 0.005, 1, function(v){ self.phase=v; self.draw(); });
+  self.draw(); return self;
+}
+
+window.simSW={};
+simSW.B2=StandingWave({
+  canvas:'swB2', slider:'swB2r', label:'swB2l',
+  lam:4, A2:6, xmax:5, grid:1,
+  mark:{x:4, name:'\u0391'},
+  yLabel:'\u03C8(cm)',
+  yMaxLabel:'3\u221A3', yMaxValue:6*Math.sin(Math.PI/3),
+  ghosts:[
+    { ph:0,   col:'#94a3b8', dash:[7,4], label:'t\u2081 = 0',
+      labelDx:0,  labelFont:14 },
+    { ph:1/6, col:'#0ea5e9', dash:[7,4], label:'t\u2082 = T/6',
+      labelDx:60, labelFont:14 }        /* ← μετατόπιση +60px, γραμματοσειρά 14 */
+  ]
+});
+simSW.G=StandingWave({
+  canvas:'swG', slider:'swGr', label:'swGl',
+  lam:0.72, A2:0.4, xmax:0.54, grid:0.18, phase:0.25,
+  mark:{x:0.36, name:'\u03A3'},
+  yLabel:'\u03C8(m)',
+  extremeFont: 18,                          /* ← ΝΕΟ: γραμματοσειρά 16 */
+  extremes:[
+    {ph:0.25, col:'#dc2626', name:'\u03B1'},
+    {ph:5/12, col:'#0891b2', name:'\u03B2'},
+    {ph:0.75, col:'#2563eb', name:'\u03B3'}
+  ]
+});
+window.checkSimPhase=function(btn){
+  var box=btn.closest('.numq'), ph=simSW.G.phase;
+  var d=Math.min(Math.abs(ph-1),Math.abs(ph-0));
+  var fb=box.querySelector('.fb');
+  if(d<=+box.dataset.tol){
+    fb.textContent='\u2713 \u03A3\u03C9\u03C3\u03C4\u03AC! \u03A3\u03C4\u03B9\u03B3\u03BC\u03AE t = T: \u03B7 \u03C7\u03BF\u03C1\u03B4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B5\u03C5\u03B8\u03B5\u03AF\u03B1, \u03C4\u03BF \u03A3 \u03C0\u03B5\u03C1\u03BD\u03AC \u03B1\u03C0\u03CC \u0398.\u0399. \u03C0\u03C1\u03BF\u03C2 \u03C4\u03B1 \u03BA\u03AC\u03C4\u03C9. +3';
+    box.classList.add('ok'); award('G4-a','G',+box.dataset.pts);
+  } else if(Math.abs(ph-0.5)<0.04){
+    fb.textContent='\u0391\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03A0\u03A1\u03A9\u03A4\u0397 \u03C6\u03BF\u03C1\u03AC (t = T/2). \u03A3\u03C5\u03BD\u03AD\u03C7\u03B9\u03C3\u03B5.';
+    box.classList.add('bad');
+  } else {
+    fb.textContent='\u03A4\u03BF \u03A3 \u03B4\u03B5\u03BD \u03B5\u03AF\u03BD\u03B1\u03B9 \u03C3\u03C4\u03B7 \u03B8\u03AD\u03C3\u03B7 \u03B9\u03C3\u03BF\u03C1\u03C1\u03BF\u03C0\u03AF\u03B1\u03C2. \u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5.';
+    box.classList.add('bad');
+  }
+};
+
+/* ================= ΠΡΟΣΟΜΟΙΩΣΗ ΤΡΙΓΩΝΟΥ (Β4) ================= */
+window.simTri=(function(){
+  var o=ctxOf('tri'); if(!o) return {play:function(){},draw:function(){}};
+  var sl=document.getElementById('trir'),lb=document.getElementById('tril'),msg=document.getElementById('trimsg');
+  var W=o.W,H=o.H, cx=170,cy=165,R=95;
+  var src=[{a:-Math.PI/2,off:5,n:'\u039F\u2081'},{a:Math.PI/6,off:4,n:'\u039F\u2082'},{a:5*Math.PI/6,off:3,n:'\u039F\u2083'}].map(function(s){ s.x=cx+R*Math.cos(s.a); s.y=cy+R*Math.sin(s.a); return s; });
+  function psiK(t){ var s=0; src.forEach(function(q){ if(t>=1&&t<q.off+1) s+=0.1*Math.sin(2*Math.PI*(t-1)); }); return s; }
+  function draw(t){
+    var g=o.g; g.clearRect(0,0,W,H);
+    src.forEach(function(q,i){
+      var col=['#dc2626','#2563eb','#059669'][i]; g.strokeStyle=col; g.lineWidth=1.2;
+      for(var n=0;n<=t;n++){
+        var r=(t-n);
+        if(r>t-q.off+1e-9&&r>0&&r<=t){ g.globalAlpha=0.55; g.beginPath(); g.arc(q.x,q.y,r*R,0,7); g.stroke(); }
+      }
+      g.globalAlpha=1;
+      g.fillStyle=col; g.beginPath(); g.arc(q.x,q.y,6,0,7); g.fill();
+      g.fillStyle=ink(); g.font='bold 12px sans-serif';
+      g.fillText(q.n+(t>=q.off?' (off)':''),q.x+9,q.y-6);
+    });
+    g.strokeStyle=grid(); g.beginPath(); g.moveTo(src[0].x,src[0].y); g.lineTo(src[1].x,src[1].y); g.lineTo(src[2].x,src[2].y); g.closePath(); g.stroke();
+    g.fillStyle=ink(); g.beginPath(); g.arc(cx,cy,5,0,7); g.fill(); g.fillText('\u039A',cx+8,cy+14);
+    var gx=380,gy=165,gw=300,gh=110;
+    g.strokeStyle=ink(); g.lineWidth=1.5;
+    g.beginPath(); g.moveTo(gx,gy-gh); g.lineTo(gx,gy+gh); g.moveTo(gx,gy); g.lineTo(gx+gw,gy); g.stroke();
+    g.font='11px sans-serif';
+    for(var s=0;s<=7;s++){ var px=gx+s/7.5*gw; g.strokeStyle=grid(); g.beginPath(); g.moveTo(px,gy-gh); g.lineTo(px,gy+gh); g.stroke(); g.fillStyle=ink(); g.fillText(s,px-3,gy+gh+14); }
+    g.fillStyle=ink(); g.fillText('\u03C8_K (m)',gx+4,gy-gh+2); g.fillText('t (s)',gx+gw-20,gy+gh+14);
+    [0.3,0.2,0.1].forEach(function(a){ g.fillText(a.toString().replace('.',','),gx-26,gy-a/0.3*gh+4); });
+    g.strokeStyle='#7c3aed'; g.lineWidth=2.5; g.beginPath();
+    for(var i=0;i<=400;i++){ var tt=t*i/400; var px2=gx+tt/7.5*gw, py=gy-psiK(tt)/0.3*gh; if(i===0) g.moveTo(px2,py); else g.lineTo(px2,py); }
+    g.stroke();
+    var pk=psiK(t); g.fillStyle='#7c3aed'; g.beginPath(); g.arc(gx+t/7.5*gw,gy-pk/0.3*gh,4,0,7); g.fill();
+    lb.textContent=t.toFixed(2).replace('.',',')+' s';
+    var m=t<1?'\u039A\u03B1\u03BD\u03AD\u03BD\u03B1 \u03BA\u03CD\u03BC\u03B1 \u03B4\u03B5\u03BD \u03AD\u03C7\u03B5\u03B9 \u03C6\u03C4\u03AC\u03C3\u03B5\u03B9 \u03C3\u03C4\u03BF \u039A (\u03C1 = 1 m, \u03C5 = 1 m/s).':
+      t<4?'\u039A\u03B1\u03B9 \u03C4\u03B1 3 \u03BA\u03CD\u03BC\u03B1\u03C4\u03B1 \u03C3\u03C5\u03BC\u03B2\u03AC\u03BB\u03BB\u03BF\u03C5\u03BD: \u03C8_K = 0,3\u00B7\u03B7\u03BC2\u03C0(t\u22121).':
+      t<5?'\u0397 \u03C0\u03B1\u03CD\u03C3\u03B7 \u03C4\u03B7\u03C2 \u039F\u2083 (t=3 s) \u03AD\u03C6\u03C4\u03B1\u03C3\u03B5 \u03C3\u03C4\u03BF \u039A: \u03C8_K = 0,2\u00B7\u03B7\u03BC2\u03C0(t\u22121).':
+      t<6?'\u0397 \u03C0\u03B1\u03CD\u03C3\u03B7 \u03C4\u03B7\u03C2 \u039F\u2082 \u03AD\u03C6\u03C4\u03B1\u03C3\u03B5: \u03C8_K = 0,1\u00B7\u03B7\u03BC2\u03C0(t\u22121).':
+      '\u0388\u03C6\u03C4\u03B1\u03C3\u03B5 \u03BA\u03B1\u03B9 \u03B7 \u03C0\u03B1\u03CD\u03C3\u03B7 \u03C4\u03B7\u03C2 \u039F\u2081: \u03C4\u03BF \u039A \u03B7\u03C1\u03B5\u03BC\u03B5\u03AF.';
+    msg.textContent=m;
+  }
+  sl.addEventListener('input',function(){ draw(+sl.value); });
+  draw(0);
+  return {draw:function(){draw(+sl.value);}, play:makePlayer('tri',sl,0.03,7.5,draw)};
+})();
+
+/* ================= THEMA D SIM ================= */
+window.simD=(function(){
+  var o=ctxOf('dl'); if(!o) return {play:function(){},set:function(){},draw:function(){}};
+  var sl=document.getElementById('dlr'),lb=document.getElementById('dll'),msg=document.getElementById('dlmsg');
+  var W=o.W,H=o.H, x0=40, base=250, sx=(W-80)/125, sy=22;
+  var tS=40+1/3, tA=41;
+  function psi(x,t){ if(x>2.5*t) return 0; return 2*Math.sin(2*Math.PI*(t/4-x/10)); }
+  function draw(t){
+    var g=o.g; g.clearRect(0,0,W,H);
+    g.strokeStyle=grid(); g.beginPath(); g.moveTo(x0,base); g.lineTo(W-30,base); g.stroke();
+    g.fillStyle=ink(); g.font='11px sans-serif';
+    [0,25,50,75,100,125].forEach(function(m){ g.fillText(m,x0+m*sx-6,base+40); });
+    g.fillText('x (m)',W-60,base+56);
+    g.strokeStyle='#2563eb'; g.lineWidth=2.5; g.beginPath();
+    for(var i=0;i<=500;i++){ var x=125*i/500; var px=x0+x*sx, py=base-psi(x,t)*sy; if(i===0) g.moveTo(px,py); else g.lineTo(px,py); }
+    g.stroke();
+    var yS=psi(100,t), pxS=x0+100*sx, pyS=base-yS*sy, on=t>=tS;
+    g.fillStyle=on?'#dc2626':'#64748b'; g.beginPath(); g.arc(pxS,pyS,7,0,7); g.fill();
+    g.fillStyle=ink(); g.font='bold 12px sans-serif'; g.fillText('S'+(on?' \u266A':''),pxS+10,pyS+4);
+    var pxA=pxS, pyA=30;
+    g.fillStyle='#059669'; g.beginPath(); g.arc(pxA,pyA,7,0,7); g.fill(); g.fillText('A (\u03B4\u03AD\u03BA\u03C4\u03B7\u03C2, 229 m)',pxA+10,pyA+4);
+    g.strokeStyle=grid(); g.setLineDash([4,4]); g.beginPath(); g.moveTo(pxS,base-2*sy-10); g.lineTo(pxA,pyA+10); g.stroke(); g.setLineDash([]);
+    if(on){
+      var gap=(base-2*sy-10)-(pyA+10);
+      var frac=Math.min(1,342*(t-tS)/228);
+      g.strokeStyle='#dc2626'; g.lineWidth=1.5;
+      for(var k=0;k<4;k++){
+        var f=frac-k*0.12;
+        if(f>0){ g.globalAlpha=0.6; g.beginPath(); g.arc(pxS,pyS,f*gap,Math.PI*1.15,Math.PI*1.85); g.stroke(); }
+      }
+      g.globalAlpha=1;
+      if(t>=tA){ g.fillStyle='#059669'; g.font='bold 13px sans-serif'; g.fillText('\uD83D\uDD0A \u03BA\u03B1\u03C4\u03B1\u03B3\u03C1\u03AC\u03C6\u03B5\u03B9 f_A \u2248 3420 Hz',pxA+10,pyA+22); }
+    }
+    g.fillStyle=ink(); g.font='12px sans-serif';
+    g.fillText('\u03C8 = 2\u00B7\u03B7\u03BC2\u03C0(t/4 \u2212 x/10)   \u03C5 = 2,5 m/s   \u03C8_S = '+yS.toFixed(2).replace('.',',')+' m   a_S = '+(-2.5*yS).toFixed(2).replace('.',',')+' m/s\u00B2',x0,base+68);
+    lb.textContent=t.toFixed(1).replace('.',',')+' s';
+    msg.innerHTML=t<40?'\u03A4\u03BF \u03BA\u03CD\u03BC\u03B1 \u03B4\u03B5\u03BD \u03AD\u03C7\u03B5\u03B9 \u03C6\u03C4\u03AC\u03C3\u03B5\u03B9 \u03B1\u03BA\u03CC\u03BC\u03B7 \u03C3\u03C4\u03B7\u03BD S (\u03C6\u03C4\u03AC\u03BD\u03B5\u03B9 \u03C3\u03B5 t = 100/2,5 = 40 s).':
+      t<tS?'\u0397 S \u03C4\u03B1\u03BB\u03B1\u03BD\u03C4\u03CE\u03BD\u03B5\u03C4\u03B1\u03B9 (\u03BE\u03B5\u03BA\u03AF\u03BD\u03B7\u03C3\u03B5 \u03B1\u03C0\u03CC \u0398.\u0399. \u03C0\u03C1\u03BF\u03C2 \u03C4\u03B1 \u03C0\u03AC\u03BD\u03C9). \u0395\u03BD\u03B5\u03C1\u03B3\u03BF\u03C0\u03BF\u03AF\u03B7\u03C3\u03B7 \u03CC\u03C4\u03B1\u03BD \u03C8 = +1 m \u21D2 a = \u22122,5 m/s\u00B2.':
+      t<tA?'<b>t = 121/3 s \u2248 40,33 s:</b> \u03B7 S \u03B5\u03BD\u03B5\u03C1\u03B3\u03BF\u03C0\u03BF\u03B9\u03AE\u03B8\u03B7\u03BA\u03B5 \u03C3\u03C4\u03BF \u03C8 = +1 m \u03BC\u03B5 \u03C5 = 2,7 m/s \u03C0\u03C1\u03BF\u03C2 \u03C4\u03BF\u03BD \u0391. \u039F \u03AE\u03C7\u03BF\u03C2 \u03C4\u03B1\u03BE\u03B9\u03B4\u03B5\u03CD\u03B5\u03B9 228 m \u03C3\u03B5 2/3 s.':
+      '<b>t \u2265 41 s:</b> \u03BF \u03B4\u03AD\u03BA\u03C4\u03B7\u03C2 \u0391 \u03BA\u03B1\u03C4\u03B1\u03B3\u03C1\u03AC\u03C6\u03B5\u03B9 \u03AE\u03C7\u03BF\u00B7 \u03B1\u03C1\u03C7\u03B9\u03BA\u03AE \u03C3\u03C5\u03C7\u03BD\u03CC\u03C4\u03B7\u03C4\u03B1 f_A = 3393 + 10\u00B72,7 = 3420 Hz.';
+  }
+  sl.addEventListener('input',function(){ draw(+sl.value); });
+  draw(0);
+  return {draw:function(){draw(+sl.value);}, set:function(v){ sl.value=v; draw(v); }, play:makePlayer('dl',sl,0.15,46,draw)};
+})();
+
+function redrawAll(){
+  var t1=document.getElementById('a2t');
+  if(t1) drawA2(+t1.value);
+  var t3=document.getElementById('b3t');
+  if(t3) drawB3(+t3.value);
+  if(window.simSW && simSW.B2) simSW.B2.draw();
+  if(window.simSW && simSW.G) simSW.G.draw();
+  if(window.simTri && simTri.draw) simTri.draw();
+  if(window.simD && simD.draw) simD.draw();
+}
+window.redrawAll=redrawAll;
+
+/* ================= INIT ================= */
+function initAll(){
+  applyRestState();
+  drawA2(0);
+  drawB3(0);
+  refresh();
+  loadProgress();
+  redrawAll();
+  
+  /* Ξανα-επεξεργασία MathJax μετά το load — λύνει τα μαθηματικά που δεν φόρτωσαν */
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(function(err){ /* αγνόησε */ });
+  }
+  
+  /* Δεύτερη προσπάθεια μετά το MathJax (για canvases που μόλις έγιναν ορατά) */
+  setTimeout(function(){
+    drawA2(0); drawB3(0); redrawAll();
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise().catch(function(err){ /* αγνόησε */ });
+    }
+  }, 800);
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', initAll);
+} else {
+  initAll();
+}
+})();
+</script>
