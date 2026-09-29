@@ -1025,14 +1025,23 @@ window.revealRest=function(){
   if(gate){ gate.style.display='none'; }
   try{ localStorage.setItem(REST_KEY,'1'); }catch(e){}
   
-  /* ▼▼▼ ΝΕΟ: Ξανα-επεξεργασία MathJax ▼▼▼ */
+  /* Πρώτη κλήση — άμεση */
   if(window.MathJax && MathJax.typesetPromise){
     MathJax.typesetPromise([rest]).catch(function(err){ /* αγνόησε */ });
   }
-  /* ▲▲▲ ΤΕΛΟΣ ΝΕΟΥ ▲▲▲ */
   
+  /* ▼▼▼ Δεύτερη κλήση — μετά 2000ms, για σιγουριά ▼▼▼ */
+  setTimeout(function(){
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise().catch(function(err){ /* αγνόησε */ });
+    }
+  }, 2000);
+  /* ▲▲▲ ΤΕΛΟΣ ΔΕΥΤΕΡΗΣ ΚΛΗΣΗΣ ▲▲▲ */
+  
+  /* Ξανασχεδίασε τα canvases τώρα που είναι ορατά */
   setTimeout(function(){ if(window.redrawAll) redrawAll(); }, 100);
 };
+
 function applyRestState(){
   try{
     if(localStorage.getItem(REST_KEY)==='1'){
