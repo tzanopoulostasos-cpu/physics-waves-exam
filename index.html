@@ -1887,7 +1887,7 @@ window.simD=(function(){
     g.stroke();
     var yS=psi(100,t), pxS=x0+100*sx, pyS=base-yS*sy, on=t>=tS;
     g.fillStyle=on?'#dc2626':'#64748b'; g.beginPath(); g.arc(pxS,pyS,7,0,7); g.fill();
-    g.fillStyle=ink(); g.font='bold 12px sans-serif'; g.fillText('S'+(on?' \u266A':''),pxS+10,pyS+4);
+    g.fillStyle=ink(); g.font='bold 12px sans-serif'; g.fillText('S'+(on?' \u266A':''),pxS+10,pyS-8);
     var pxA=pxS, pyA=30;
     g.fillStyle='#059669'; g.beginPath(); g.arc(pxA,pyA,7,0,7); g.fill(); g.fillText('A (\u03B4\u03AD\u03BA\u03C4\u03B7\u03C2, 229 m)',pxA+10,pyA+4);
     g.strokeStyle=grid(); g.setLineDash([4,4]); g.beginPath(); g.moveTo(pxS,base-2*sy-10); g.lineTo(pxA,pyA+10); g.stroke(); g.setLineDash([]);
