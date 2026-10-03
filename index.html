@@ -517,6 +517,76 @@ table.kx-tab th{background:var(--soft)}
   background:rgba(8,145,178,.12)!important;
   border-color:var(--A)!important;
 }
+/* Tooltip για λέξεις με επεξήγηση */
+.kx-tooltip{
+  position:relative;
+  border-bottom:1px dashed var(--A);
+  cursor:help;
+  color:var(--A)!important;
+  -webkit-text-fill-color:var(--A)!important;
+  font-weight:600;
+}
+.kx-tooltip-icon{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  line-height:14px;
+  text-align:center;
+  margin-left:2px;
+  border-radius:50%;
+  background:var(--A);
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:.7rem;
+  font-weight:900;
+  vertical-align:middle;
+}
+.kx-tooltip::after{
+  content:attr(title);
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  background:#1e293b;
+  color:#f1f5f9!important;
+  -webkit-text-fill-color:#f1f5f9!important;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:.8rem;
+  font-weight:400;
+  line-height:1.4;
+  width:max-content;
+  max-width:280px;
+  white-space:normal;
+  text-align:left;
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .2s,transform .2s;
+  pointer-events:none;
+  z-index:100;
+}
+.kx-tooltip::before{
+  content:'';
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  border:6px solid transparent;
+  border-top-color:#1e293b;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .2s;
+  pointer-events:none;
+}
+.kx-tooltip:hover::after,
+.kx-tooltip:hover::before{
+  opacity:1;
+  visibility:visible;
+}
+.kx-tooltip:hover::after{
+  transform:translateX(-50%) translateY(-4px);
+}
 </style>
 
 <div id="kx-app" class="kx-pending" data-mode="study" role="main">
@@ -530,9 +600,11 @@ table.kx-tab th{background:var(--soft)}
   </div>
   <h1>Τρίωρο Διαγώνισμα στα Κύματα</h1>
   <p class="kx-sub">Για καλά διαβασμένους</p>
-  <p class="mut" style="margin-top:8px">
-    Επίλεξε <b>📖 Μελέτη</b> για βήμα-βήμα λύσεις, προσομοιώσεις και άμεση ανάδραση, ή <b>⏱ Εξέταση</b> για να το γράψεις με χρονόμετρο και με κρυφές τις λύσεις. © Τάσος Τζανόπουλος.
-  </p>
+ <p class="mut" style="margin-top:8px">
+  Επίλεξε <b>📖 Μελέτη</b> για βήμα-βήμα λύσεις, προσομοιώσεις και άμεση 
+  <span class="kx-tooltip" title="Σχόλια και κριτική για να βελτιώσετε την απόδοσή σας">ανάδραση<span class="kx-tooltip-icon">?</span></span>, 
+  ή <b>⏱ Εξέταση</b> για να το γράψεις με χρονόμετρο και με κρυφές λύσεις. © Τάσος Τζανόπουλος.
+</p>
   <ul class="kx-hints">
   <li>
     💾 Η πρόοδός σου <b>αποθηκεύεται αυτόματα</b>. 
