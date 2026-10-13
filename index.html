@@ -1,4 +1,4 @@
-<!-- ============================================================
+﻿<!-- ============================================================
      ΤΡΙΩΡΟ ΔΙΑΓΩΝΙΣΜΑ ΣΤΑ ΚΥΜΑΤΑ – Διαδραστική έκδοση v4
      Λειτουργίες: Εξέταση / Μελέτη · Προσομοιώσεις · Βήμα-βήμα
      Επιμέλεια: Τάσος Τζανόπουλος
@@ -517,75 +517,38 @@ table.kx-tab th{background:var(--soft)}
   background:rgba(8,145,178,.12)!important;
   border-color:var(--A)!important;
 }
-/* Tooltip για λέξεις με επεξήγηση */
-.kx-tooltip{
-  position:relative;
-  border-bottom:1px dashed var(--A);
-  cursor:help;
-  color:var(--A)!important;
-  -webkit-text-fill-color:var(--A)!important;
-  font-weight:600;
+/* ─── Translate buttons ─── */
+#gt-wrap button:hover{background:#f1f5f9}
+#kx-app.dark #gt-toggle,
+#kx-app.dark #gt-reset{background:#1e293b;color:#e2e8f0;border-color:#334155}
+#kx-app.dark #gt-wrap button:hover{background:#334155}
+#kx-app.dark #gt-panel{background:#0f172a;border-color:#334155;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+#kx-app.dark .goog-te-gadget{color:#e2e8f0!important}
+#kx-app.dark .goog-te-combo{background:#1e293b!important;color:#e2e8f0!important;border-color:#334155!important}
+
+/* Google Translate overrides */
+.goog-logo-link{display:none!important}
+.goog-te-gadget{font-family:Inter,system-ui,sans-serif!important;font-size:12px!important;color:#334155!important}
+.goog-te-gadget .goog-te-combo{font-family:inherit!important;font-size:13px!important;padding:6px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;color:#0f172a;cursor:pointer;width:100%;}
+.goog-te-banner-frame{display:none!important}
+body{top:0!important}
+.skiptranslate{display:none!important}
+body > .skiptranslate{display:none!important}
+.goog-te-gadget-simple{background:transparent!important;border:0!important;padding:0!important}
+
+@media print{
+  #gt-wrap{display:none!important}
 }
-.kx-tooltip-icon{
-  display:inline-block;
-  width:14px;
-  height:14px;
-  line-height:14px;
-  text-align:center;
-  margin-left:2px;
-  border-radius:50%;
-  background:var(--A);
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  font-size:.7rem;
-  font-weight:900;
-  vertical-align:middle;
-}
-.kx-tooltip::after{
-  content:attr(title);
-  position:absolute;
-  bottom:100%;
-  left:50%;
-  transform:translateX(-50%) translateY(-8px);
-  background:#1e293b;
-  color:#f1f5f9!important;
-  -webkit-text-fill-color:#f1f5f9!important;
-  padding:8px 12px;
-  border-radius:8px;
-  font-size:.8rem;
-  font-weight:400;
-  line-height:1.4;
-  width:max-content;
-  max-width:280px;
-  white-space:normal;
-  text-align:left;
-  box-shadow:0 4px 14px rgba(0,0,0,.2);
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .2s,transform .2s;
-  pointer-events:none;
-  z-index:100;
-}
-.kx-tooltip::before{
-  content:'';
-  position:absolute;
-  bottom:100%;
-  left:50%;
-  transform:translateX(-50%);
-  border:6px solid transparent;
-  border-top-color:#1e293b;
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .2s;
-  pointer-events:none;
-}
-.kx-tooltip:hover::after,
-.kx-tooltip:hover::before{
-  opacity:1;
-  visibility:visible;
-}
-.kx-tooltip:hover::after{
-  transform:translateX(-50%) translateY(-4px);
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
 }
 </style>
 
@@ -600,11 +563,9 @@ table.kx-tab th{background:var(--soft)}
   </div>
   <h1>Τρίωρο Διαγώνισμα στα Κύματα</h1>
   <p class="kx-sub">Για καλά διαβασμένους</p>
- <p class="mut" style="margin-top:8px">
-  Επίλεξε <b>📖 Μελέτη</b> για βήμα-βήμα λύσεις, προσομοιώσεις και άμεση 
-  <span class="kx-tooltip" title="Σχόλια και κριτική για να βελτιώσετε την απόδοσή σας">ανάδραση<span class="kx-tooltip-icon">?</span></span>, 
-  ή <b>⏱ Εξέταση</b> για να το γράψεις με χρονόμετρο και με κρυφές λύσεις. © Τάσος Τζανόπουλος.
-</p>
+  <p class="mut" style="margin-top:8px">
+    Επίλεξε <b>📖 Μελέτη</b> για βήμα-βήμα λύσεις, προσομοιώσεις και άμεση ανάδραση, ή <b>⏱ Εξέταση</b> για να το γράψεις με χρονόμετρο και με κρυφές τις λύσεις. © Τάσος Τζανόπουλος.
+  </p>
   <ul class="kx-hints">
   <li>
     💾 Η πρόοδός σου <b>αποθηκεύεται αυτόματα</b>. 
@@ -631,12 +592,40 @@ table.kx-tab th{background:var(--soft)}
   </li>
 </ul>
 </section>
+<!-- ================= TRANSLATE WIDGET ================= -->
+<div id="gt-wrap" class="no-print" style="position:relative;max-width:980px;margin:0 auto 16px;display:flex;justify-content:flex-end;gap:8px;font-family:Inter,system-ui,sans-serif;padding:0 12px;">
+  <button id="gt-toggle"
+          type="button"
+          aria-label="Αλλαγή γλώσσας"
+          aria-expanded="false"
+          onclick="(function(b){var p=document.getElementById('gt-panel');var o=p.style.display==='block';p.style.display=o?'none':'block';b.setAttribute('aria-expanded',String(!o));})(this)"
+          style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;color:#334155;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(15,23,42,0.08);">
+    <i class="fa-solid fa-globe" style="color:#0891b2;">🌐</i>
+    <span>Γλώσσα</span>
+    <span style="font-size:10px;opacity:0.6;">▾</span>
+  </button>
+
+  <button id="gt-reset"
+          type="button"
+          aria-label="Επιστροφή στα Ελληνικά"
+          title="Επιστροφή στα Ελληνικά"
+          onclick="resetToGreek()"
+          style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;color:#334155;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(15,23,42,0.08);">
+    <span style="font-size:16px;">🇬🇷</span>
+    <span>Ελληνικά</span>
+  </button>
+
+  <div id="gt-panel"
+       style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,0.18);padding:10px;min-width:200px;z-index:50;">
+    <div id="google_translate_element"></div>
+  </div>
+</div>
 
 <!-- ================= TOOLBAR ================= -->
 <div class="kx-bar" role="toolbar">
-  <div class="kx-mode" role="tablist">
-    <button id="mStudy" class="on" onclick="setMode('study')" aria-label="Λειτουργία μελέτης" role="tab" aria-selected="true">📖 Μελέτη</button>
-    <button id="mExam" onclick="setMode('exam')" aria-label="Λειτουργία εξέτασης με χρονόμετρο" role="tab" aria-selected="false">⏱ Εξέταση</button>
+  <div class="kx-mode">
+    <button id="mStudy" class="on" onclick="setMode('study')" aria-label="Λειτουργία μελέτης" aria-pressed="true">📖 Μελέτη</button>
+<button id="mExam" onclick="setMode('exam')" aria-label="Λειτουργία εξέτασης με χρονόμετρο" aria-pressed="false">⏱ Εξέταση</button>
   </div>
   <span id="timer" class="kx-timer exam-only" aria-live="polite">03:00:00</span>
   <button class="kx-btn pri exam-only" onclick="submitExam()" aria-label="Υποβολή εξέτασης">Υποβολή</button>
@@ -660,6 +649,7 @@ table.kx-tab th{background:var(--soft)}
 <p class="mut" style="font-size:.9rem">Στα Α1–Α4 μία πρόταση είναι σωστή. Επίλεξέ την.</p>
 
 <article class="q" data-theme="A" data-q="A1" data-pts="5" data-correct="3">
+  <h2 class="sr-only">Ερώτηση A1</h2>
   <div class="head"><span>Α1</span><span>5 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -698,6 +688,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Α2 -->
 <article class="q" data-theme="A" data-q="A2" data-pts="5" data-correct="0">
+  <h2 class="sr-only">Ερώτηση A2</h2>
   <div class="head"><span>Α2</span><span>5 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -729,6 +720,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Α3 -->
 <article class="q" data-theme="A" data-q="A3" data-pts="5" data-correct="2">
+  <h2 class="sr-only">Ερώτηση A3</h2>
   <div class="head"><span>Α3</span><span>5 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -753,6 +745,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Α4 -->
 <article class="q" data-theme="A" data-q="A4" data-pts="5" data-correct="0">
+  <h2 class="sr-only">Ερώτηση A4</h2>
   <div class="head"><span>Α4</span><span>5 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -777,6 +770,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Α5 -->
 <article class="q" data-theme="A" data-q="A5" data-pts="5">
+  <h2 class="sr-only">Ερώτηση A5</h2>
   <div class="head"><span>Α5</span><span>5 μονάδες (1 έκαστη)</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -796,6 +790,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Β1 -->
 <article class="q" data-theme="B" data-q="B1" data-pts="6">
+  <h2 class="sr-only">Ερώτηση B1</h2>
   <div class="head"><span>Β1</span><span>6 μονάδες (1,5 έκαστη)</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -834,6 +829,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Β2 -->
 <article class="q" data-theme="B" data-q="B2" data-pts="6">
+  <h2 class="sr-only">Ερώτηση B2</h2>
   <div class="head"><span>Β2</span><span>6 μονάδες (3 + 3)</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -878,6 +874,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Β3 -->
 <article class="q" data-theme="B" data-q="B3" data-pts="6">
+  <h2 class="sr-only">Ερώτηση B3</h2>
   <div class="head"><span>Β3</span><span>6 μονάδες (2 έκαστη)</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -928,6 +925,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Β4 -->
 <article class="q" data-theme="B" data-q="B4" data-pts="7">
+  <h2 class="sr-only">Ερώτηση B4</h2>
   <div class="head"><span>Β4</span><span>7 μονάδες (2 + 5)</span></div>
   <div class="body">
     <span class="lbl">Εκφώνηση</span>
@@ -976,6 +974,7 @@ table.kx-tab th{background:var(--soft)}
 <div class="kx-tema"><span class="let" style="background:var(--G)">Γ</span><h2>ΘΕΜΑ Γ — Στάσιμο κύμα σε χορδή</h2><span class="pts">25 μονάδες</span></div>
 
 <article class="q" data-theme="G" data-q="G0" data-pts="0">
+  <h2 class="sr-only">Ερώτηση G0</h2>
   <div class="head"><span>Εκφώνηση</span><span>κοινή για Γ1–Γ4</span></div>
   <div class="body">
     <p>Σε μια ελαστική χορδή μεγάλου μήκους έχει διαμορφωθεί στάσιμο κύμα της μορφής $y=2A\,συν(2πx/λ)\,ημωt$ με $A=0{,}2$ m. Στο σχήμα φαίνονται τρία στιγμιότυπα α, β, γ κατά τη σειρά που εμφανίζονται στην περιοχή ΟΑ, από $x=0$ μέχρι $x_A=0{,}54$ m. Κατά την απ' ευθείας μετάβαση από το στιγμιότυπο α στο β είναι $t_β-t_α=4$ ms, ενώ στη συνέχεια, για την απ' ευθείας μετάβαση από το β στο γ, είναι $t_γ-t_β=T/3$. Το σημείο Σ αντιστοιχεί στην πρώτη κοιλία μετά από αυτήν της αρχής αξόνων Ο.</p>
@@ -996,6 +995,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Γ1 -->
 <article class="q" data-theme="G" data-q="G1" data-pts="7">
+  <h2 class="sr-only">Ερώτηση G1</h2>
   <div class="head"><span>Γ1</span><span>7 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Ζητούμενο</span>
@@ -1024,6 +1024,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Γ2 -->
 <article class="q" data-theme="G" data-q="G2" data-pts="6">
+  <h2 class="sr-only">Ερώτηση G2</h2>
   <div class="head"><span>Γ2</span><span>6 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Ζητούμενο</span><p>Να υπολογίσεις την ταχύτητα του υλικού σημείου Σ τη χρονική στιγμή $t_β$.</p>
@@ -1051,6 +1052,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Γ3 -->
 <article class="q" data-theme="G" data-q="G3" data-pts="6">
+  <h2 class="sr-only">Ερώτηση G3</h2>
   <div class="head"><span>Γ3</span><span>6 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Ζητούμενο</span><p>Σε πόσο χρόνο μετά την $t_β$ η ταχύτητα του Σ μηδενίζεται στιγμιαία για δεύτερη φορά;</p>
@@ -1079,6 +1081,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Γ4 -->
 <article class="q" data-theme="G" data-q="G4" data-pts="6">
+  <h2 class="sr-only">Ερώτηση G4</h2>
   <div class="head"><span>Γ4</span><span>6 μονάδες (3 + 3)</span></div>
   <div class="body">
     <span class="lbl">Ζητούμενο</span>
@@ -1117,6 +1120,7 @@ table.kx-tab th{background:var(--soft)}
 <div class="kx-tema"><span class="let" style="background:var(--D)">Δ</span><h2>ΘΕΜΑ Δ — Κύμα σε χορδή, ηχητική πηγή &amp; Ταλάντωση</h2><span class="pts">25 μονάδες</span></div>
 
 <article class="q" data-theme="D" data-q="D0" data-pts="0">
+  <h2 class="sr-only">Ερώτηση D0</h2>
   <div class="head"><span>Εκφώνηση</span><span>κοινή για Δ1–Δ6</span></div>
   <div class="body">
     <p>Πάνω σε μια οριζόντια τεντωμένη χορδή πολύ μεγάλου μήκους, προσανατολισμένη στη διεύθυνση του άξονα $x'x$, διαδίδεται προς τη θετική κατεύθυνση ένα κύμα μήκους κύματος $λ=10$ m, το οποίο δημιουργείται από μια πηγή που βρίσκεται στη θέση $x=0$ και ξεκινάει τη στιγμή $t=0$ να ταλαντώνεται με εξίσωση $ψ=2\,ημ(0{,}5πt)$ (S.I.). Σε απόσταση 100 m από την πηγή του κύματος, στη θέση $x=100$ m, έχει τοποθετηθεί μια μικροσυσκευή S αμελητέας μάζας και αμελητέων διαστάσεων, ώστε να μην επηρεάζει τη διάδοση του κύματος. Η οποία μπορεί να εκπέμπει ήχο συχνότητας $f_s=3393$ Hz. Για να ενεργοποιηθεί όμως πρέπει να αποκτήσει κατακόρυφη προς τα κάτω επιτάχυνση ίση με $-2{,}5$ m/s² (και από κει και πέρα παραμένει σε διαρκή λειτουργία).</p>
@@ -1139,6 +1143,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ1 -->
 <article class="q" data-theme="D" data-q="D1" data-pts="4">
+  <h2 class="sr-only">Ερώτηση D1</h2>
   <div class="head"><span>Δ1</span><span>4 μονάδες</span></div>
   <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια είναι η εξίσωση του κύματος που παράγεται πάνω στη χορδή;</p>
     <div class="opts" data-pts="4" data-correct="1" role="group" aria-label="Επιλογές Δ1">
@@ -1158,6 +1163,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ2 -->
 <article class="q" data-theme="D" data-q="D2" data-pts="4">
+  <h2 class="sr-only">Ερώτηση D2</h2>
   <div class="head"><span>Δ2</span><span>4 μονάδες</span></div>
   <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια χρονική στιγμή θα φτάσει το κύμα στη μικροσυσκευή;</p>
     <div class="steps study-only">
@@ -1174,6 +1180,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ3 -->
 <article class="q" data-theme="D" data-q="D3" data-pts="5">
+  <h2 class="sr-only">Ερώτηση D3</h2>
   <div class="head"><span>Δ3</span><span>5 μονάδες</span></div>
   <div class="body"><span class="lbl">Ζητούμενο</span><p>Ποια στιγμή αρχίζει να εκπέμπει η μικροσυσκευή;</p>
     <div class="steps study-only">
@@ -1196,6 +1203,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ4 -->
 <article class="q" data-theme="D" data-q="D4" data-pts="4">
+  <h2 class="sr-only">Ερώτηση D4</h2>
   <div class="head"><span>Δ4</span><span>4 μονάδες</span></div>
   <div class="body"><span class="lbl">Ζητούμενο</span><p>Από ποια στιγμή και έπειτα ο δέκτης αρχίζει να καταγράφει ηχητικό σήμα;</p>
     <div class="steps study-only">
@@ -1216,6 +1224,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ5 — ΝΕΑ ΕΚΦΩΝΗΣΗ -->
 <article class="q" data-theme="D" data-q="D5" data-pts="4">
+  <h2 class="sr-only">Ερώτηση D5</h2>
   <div class="head"><span>Δ5</span><span>4 μονάδες</span></div>
   <div class="body">
     <span class="lbl">Ζητούμενο</span>
@@ -1242,6 +1251,7 @@ table.kx-tab th{background:var(--soft)}
 
 <!-- Δ6 -->
 <article class="q" data-theme="D" data-q="D6" data-pts="4">
+  <h2 class="sr-only">Ερώτηση D6</h2>
   <div class="head"><span>Δ6</span><span>4 μονάδες</span></div>
   <div class="body"><span class="lbl">Ζητούμενο</span><p>Πόσο είναι το ελάχιστο πλάτος του κύματος, με την ίδια συχνότητα, που μπορεί να ενεργοποιήσει τη μικροσυσκευή;</p>
     <div class="steps study-only">
@@ -1284,6 +1294,31 @@ table.kx-tab th{background:var(--soft)}
 <script>
 (function(){
 'use strict';
+/* ================= GOOGLE TRANSLATE ================= */
+function resetToGreek(){
+  var exp = 'expires=Thu, 01 Jan 1970 00:00:00 UTC';
+  var host = location.hostname;
+  document.cookie = 'googtrans=; ' + exp + '; path=/;';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=' + host + ';';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=.' + host + ';';
+  try { localStorage.removeItem('googtrans'); } catch(e) {}
+  try { sessionStorage.removeItem('googtrans'); } catch(e) {}
+  location.reload();
+}
+
+function googleTranslateElementInit(){
+  if (typeof google === 'undefined' || !google.translate) {
+    setTimeout(googleTranslateElementInit, 300);
+    return;
+  }
+  new google.translate.TranslateElement({
+    pageLanguage: 'el',
+    includedLanguages: 'el,en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false,
+    multilanguagePage: true
+  }, 'google_translate_element');
+}
 /* ================= STATE ================= */
 var APP=document.getElementById('kx-app');
 var earned={};
@@ -1959,7 +1994,7 @@ window.simD=(function(){
     g.stroke();
     var yS=psi(100,t), pxS=x0+100*sx, pyS=base-yS*sy, on=t>=tS;
     g.fillStyle=on?'#dc2626':'#64748b'; g.beginPath(); g.arc(pxS,pyS,7,0,7); g.fill();
-    g.fillStyle=ink(); g.font='bold 12px sans-serif'; g.fillText('S'+(on?' \u266A':''),pxS+10,pyS-8);
+    g.fillStyle=ink(); g.font='bold 12px sans-serif'; g.fillText('S'+(on?' \u266A':''),pxS+10,pyS+4);
     var pxA=pxS, pyA=30;
     g.fillStyle='#059669'; g.beginPath(); g.arc(pxA,pyA,7,0,7); g.fill(); g.fillText('A (\u03B4\u03AD\u03BA\u03C4\u03B7\u03C2, 229 m)',pxA+10,pyA+4);
     g.strokeStyle=grid(); g.setLineDash([4,4]); g.beginPath(); g.moveTo(pxS,base-2*sy-10); g.lineTo(pxA,pyA+10); g.stroke(); g.setLineDash([]);
@@ -2028,3 +2063,31 @@ if(document.readyState==='loading'){
 }
 })();
 </script>
+<!-- Google Translate API -->
+<script>
+function googleTranslateElementInit(){
+  if (typeof google === 'undefined' || !google.translate) {
+    setTimeout(googleTranslateElementInit, 300);
+    return;
+  }
+  new google.translate.TranslateElement({
+    pageLanguage: 'el',
+    includedLanguages: 'el,en,de,fr,it,es,pt,ru,ar,zh-CN,ja,ko,tr,ro,bg,sr,pl,nl,sv,da,fi,cs,hu,he,hi',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false,
+    multilanguagePage: true
+  }, 'google_translate_element');
+}
+
+function resetToGreek(){
+  var exp = 'expires=Thu, 01 Jan 1970 00:00:00 UTC';
+  var host = location.hostname;
+  document.cookie = 'googtrans=; ' + exp + '; path=/;';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=' + host + ';';
+  document.cookie = 'googtrans=; ' + exp + '; path=/; domain=.' + host + ';';
+  try { localStorage.removeItem('googtrans'); } catch(e) {}
+  try { sessionStorage.removeItem('googtrans'); } catch(e) {}
+  location.reload();
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
